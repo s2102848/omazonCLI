@@ -53,6 +53,13 @@ public class Product implements Serializable{
             return null;
         }
     }
+
+    public void putIntoCart(User user){
+        String[] newShoppingCart = user.getShoppingCart();
+        newShoppingCart[user.getProductsInCart()]=this.getProductName();
+        user.setShoppingCart(newShoppingCart);
+        User.SaveToFile(user);
+    }
     //----------------------------------\\
 
     public String getProductName() {

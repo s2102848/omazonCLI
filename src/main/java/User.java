@@ -20,7 +20,25 @@ public class User implements Serializable{
   //  private Product[] productsList;
     private String[] transactionHistory;
     private String[] orderNotifications;
+    @Serial
     private static final long serialVersionUID = 1L;
+    private String[] shoppingCart = new String[100];
+    private int productsInCart=0;
+
+    public int getProductsInCart(){
+        return productsInCart;
+    }
+    public void incrementProductsInCart(){
+        this.productsInCart++;
+    }
+
+    public void setShoppingCart(String[] shoppingCart){
+        this.shoppingCart = shoppingCart;
+    }
+    public String[] getShoppingCart(){
+        return shoppingCart;
+    }
+
 
     public User(String Username,String Password,String email) {
         this.Username=Username;

@@ -18,6 +18,7 @@ public class Main {
             System.out.println("\t\t\t\t 2. Buy product");
             System.out.println("\t\t\t\t 3. List products");
             System.out.println("\t\t\t\t 4. Check balance");
+            System.out.println("\t\t\t\t 5. Check shopping cart");
             System.out.println("\t\t\t\t 0. EXIT");
             System.out.println("\t\t\t\t**==============================================================**");
             String answer = s.next();
