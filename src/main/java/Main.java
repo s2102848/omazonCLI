@@ -5,12 +5,16 @@ import java.io.IOException;
 public class Main {
     public static boolean loggedIn=false;
     public static boolean selling=false;
+    public static boolean checkingShoppingCart=false;
     public static User activeUser = greetingscreen();
     //todo: implement categories(!)
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         System.out.println(activeUser.getUsername()+" is logged in.");
         mainscreen();
+        Product prod = Product.ReadFromFile("C:\\Testu\\PRODUCTS\\Pencil");
+        //todo: fix the shopping cart
+       // prod.putIntoCart(activeUser);
         while(loggedIn){
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Current user: "+activeUser.getUsername()+"!");
@@ -28,6 +32,11 @@ public class Main {
             }
             if(answer.equals("0")){
                 loggedIn=false;
+            }
+            if(answer.equals("5")){
+                checkingShoppingCart=true;
+                shoppingCart();
+
             }
 
         }
@@ -186,6 +195,23 @@ public class Main {
             }
             if(answer.equals("4")){
                 selling=false;
+            }
+
+        }
+    }
+    public static void shoppingCart(){
+        while(loggedIn&&checkingShoppingCart){
+            Scanner s = new Scanner(System.in);
+            String answer;
+            System.out.println("\t\t\t\t**==============================================================**");
+            System.out.println("\t\t\t\t Below is the list of the products in your shopping cart!");
+            System.out.println("\t\t\t\t**==============================================================**");
+            if(activeUser.getProductsInCart()==0){
+                System.out.println("\t\t\t\t There are no products at all yet. Add some to your cart.");
+            }else{
+                for(String string : activeUser.getShoppingCart()){
+                    System.out.println(string);
+                }
             }
 
         }

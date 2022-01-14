@@ -55,7 +55,11 @@ public class Product implements Serializable{
     }
 
     public void putIntoCart(User user){
-        String[] newShoppingCart = user.getShoppingCart();
+        String[] newShoppingCart = new String[100];
+        User.initializeShoppingCart(newShoppingCart);
+        for(int i=0; i<user.getShoppingCart().length;i++){
+            newShoppingCart[i]=user.getShoppingCart()[i];
+        }
         newShoppingCart[user.getProductsInCart()]=this.getProductName();
         user.setShoppingCart(newShoppingCart);
         User.SaveToFile(user);

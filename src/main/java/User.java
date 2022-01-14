@@ -23,6 +23,7 @@ public class User implements Serializable{
     @Serial
     private static final long serialVersionUID = 1L;
     private String[] shoppingCart = new String[100];
+
     private int productsInCart=0;
 
     public int getProductsInCart(){
@@ -35,8 +36,14 @@ public class User implements Serializable{
     public void setShoppingCart(String[] shoppingCart){
         this.shoppingCart = shoppingCart;
     }
+    public static void initializeShoppingCart(String[] shoppingCart){
+        for(int i=0; i<shoppingCart.length;i++){
+            shoppingCart[i]="";
+        }
+    }
     public String[] getShoppingCart(){
-        return shoppingCart;
+
+        return this.shoppingCart;
     }
 
 
