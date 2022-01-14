@@ -1,6 +1,9 @@
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 public class User implements Serializable{
     //Basic info
@@ -40,7 +43,7 @@ public class User implements Serializable{
     }
     public static void SaveToFile(User u){   //add filepath as a parameter
         try{
-            FileOutputStream fileOut = new FileOutputStream("C:\\Testu\\USERNAMES\\"+u.Username);
+            FileOutputStream fileOut = new FileOutputStream("Testu\\USERNAMES\\"+u.Username);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(u);
             objectOut.close();
@@ -57,7 +60,8 @@ public class User implements Serializable{
             FileInputStream fileIn = new FileInputStream(filepath);
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
             User u = (User) objectIn.readObject();
-            System.out.println("User successfully read from file.");
+            //System.out.println("User successfully read from file.");
+            objectIn.close();
             return u;
         }catch(Exception e){
             e.printStackTrace();
