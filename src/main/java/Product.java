@@ -110,19 +110,27 @@ public class Product implements Serializable{
         }
         return Parr;
     }
-    public void SearchForProduct(Product p){
+    @SuppressWarnings("empty-statement")
+    public void SearchForProduct(String productOrSellerName){
         int i = 0;
         int length = Productfolder.listFiles().length;
-        Product[] Parr = new Product[length];
+        String[] productNameList = new String[length];
+        String[] sellerNameList = new String[length];
         for(File fileEntry : Productfolder.listFiles()){
             Product k = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
-            Parr[i] = k;
+            productNameList[i] = k.getProductName();
+            sellerNameList[i]=k.getOwnerName();
             i++;
-        for(int l=0; l<Parr.length-1;l++){
-            if(Parr[l].equals(p)){
-                System.out.println(p);;
-            }else
-                System.out.println("Product Not Found");
+        for(int l=0; l<productNameList.length-1;l++){
+            if(productNameList[l].equalsIgnoreCase(productOrSellerName)){
+            
+                System.out.println("Product: "+ productName);
+            }else if(sellerNameList[l].equalsIgnoreCase(productOrSellerName))
+                System.out.println("Seller: "+ownerName);
+            else{
+                System.out.println("Product or Seller Not Found");
+            }
+                
         }
 
             }
