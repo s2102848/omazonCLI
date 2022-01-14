@@ -170,7 +170,7 @@ public class Product implements Serializable{
         }
         temp[i]= newReview;
     }
-    public void printBestSelling(Boolean descending, int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
+    public void printBestSelling(int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
@@ -181,10 +181,10 @@ public class Product implements Serializable{
         }
 
         //sorting according to salesCount
-        if (!descending)Arrays.sort(Parr, (a, b) -> (int)(a.salesCount - b.salesCount));
-        else Arrays.sort(Parr, (a, b) -> (int)(b.salesCount - a.salesCount));
+        Arrays.sort(Parr, (a, b) -> (int)(a.salesCount - b.salesCount));
 
         int j = 1;
+        System.out.println("Top "+top_n+" best selling products");
         for (Product p:Parr){
             System.out.println(j+". "+p.productName + ", RM "+p.price);
             j++;
