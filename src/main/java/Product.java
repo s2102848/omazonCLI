@@ -1,9 +1,11 @@
+package com.mycompany.omazoncli;
+
 import java.io.*;
 import java.util.Arrays;
-
+import java.util.regex.*;
 public class Product implements Serializable{
     //----------------------------------\\
-    @Serial
+    //@Serial
     private static final long serialVersionUID = 1L;
     //----------------------------------\\
     private String productName;
@@ -108,6 +110,32 @@ public class Product implements Serializable{
         }
         return Parr;
     }
+    public void SearchForProduct(Product p){
+        int i = 0;
+        int length = Productfolder.listFiles().length;
+        Product[] Parr = new Product[length];
+        for(File fileEntry : Productfolder.listFiles()){
+            Product k = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
+            Parr[i] = k;
+            i++;
+        for(int l=0; l<Parr.length-1;l++){
+            if(Parr[l].equals(p)){
+                System.out.println(p);;
+            }else
+                System.out.println("Product Not Found");
+        }
+
+            }
+    }
+
+    
+    /* for (int i=0 ;i< size-1; i++){
+         if(array[i]==value){
+            System.out.println("Element found index is :"+ i);
+         }else{
+            System.out.println("Element not found");
+         }*/
+
 
 
     public Product[] displayCategory(String category, Boolean sortPrice){
@@ -261,14 +289,14 @@ public class Product implements Serializable{
     //Category
     public void setCategory(String choice){
         switch (choice) {
-            case "1" -> this.category = "Sports and Outdoor";
-            case "2" -> this.category = "Games and Hobbies";
-            case "3" -> this.category = "Machines and Gadgets";
-            case "4" -> this.category = "Fashion and Accessories (men)";
-            case "5" -> this.category = "Fashion and Accessories (women)";
-            case "6" -> this.category = "Home and Living";
-            case "0" -> this.category = "Other";
-            default -> this.category = "Other";
+            case "1" : this.category = "Sports and Outdoor";
+            case "2" : this.category = "Games and Hobbies";
+            case "3" : this.category = "Machines and Gadgets";
+            case "4" : this.category = "Fashion and Accessories (men)";
+            case "5" : this.category = "Fashion and Accessories (women)";
+            case "6" : this.category = "Home and Living";
+            case "0" : this.category = "Other";
+            default : this.category = "Other";
         }
     }
     public String getCategory() {
