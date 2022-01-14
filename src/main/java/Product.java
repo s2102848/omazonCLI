@@ -12,28 +12,28 @@ public class Product implements Serializable{
     private int salesCount;
     private String[] reviews;
     private Boolean bestSelling;
-
-
+    private String category;
 
     private String ownerName;
     //----------------------------------\\
-    public Product(String productName, String description, Double price, int stockCount, int salesCount, String ownerName) {
+    public Product(String productName, String description, Double price, int stockCount, int salesCount,String category, String ownerName) {
         this.productName = productName;
 
         this.description = description;
         this.price = price;
         this.stockCount = stockCount;
         this.salesCount = salesCount;
+        setCategory(category);
+
         this.ownerName = ownerName;
      //   this.reviews = reviews;
     //    this.bestSelling = bestSelling;
-
     }
     //saveToFile
 
     public static void SaveToFile(Product product){   //add filepath as a parameter
         try{
-            FileOutputStream fileOut = new FileOutputStream("C:\\Testu\\PRODUCTS\\"+product.productName);
+            FileOutputStream fileOut = new FileOutputStream("Testu\\PRODUCTS\\"+product.productName);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(product);
             objectOut.close();
@@ -47,6 +47,7 @@ public class Product implements Serializable{
             FileInputStream fileIn = new FileInputStream(filepath);
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
             Product obj = (Product) objectIn.readObject();
+            objectIn.close();
             return obj;
         }catch(Exception e){
             e.printStackTrace();
@@ -129,6 +130,37 @@ public class Product implements Serializable{
         this.ownerName = ownerName;
     }
 
-
+    //Category
+    public void setCategory(String choice){
+        switch (choice) {
+            case "1":
+                this.category = "Sports and Outdoor";
+            break;
+            case "2":
+                this.category = "Games and Hobbies";
+            break;
+            case "3":
+                this.category = "Machines and Gadgets";
+            break;
+            case "4":
+                this.category = "Fashion and Accessories (men)";
+            break;
+            case "5":
+                this.category = "Fashion and Accessories (women)";
+            break;
+            case "6":
+                this.category = "Home and Living";
+            break;
+            case "0":
+                this.category = "Other";
+            break;
+            default:
+                this.category = "Other";
+            break;
+        }
+    }
+    public String getCategory() {
+        return category;
+    }
     //----------------------------------\\
 }
