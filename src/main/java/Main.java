@@ -250,6 +250,12 @@ public class Main {
             }
 
         }
+            if(answer.equals("4")){
+                selling=false;
+            }
+            if(answer.equals("0")){
+                System.exit(0);
+            }
     }
 
 }
