@@ -1,3 +1,6 @@
+import connect.DB;
+import connect.UserCrud;
+
 import java.io.File;
 import java.util.Objects;
 import java.util.Scanner;
@@ -10,6 +13,9 @@ public class Main {
 
     //todo: implement categories(!)
     public static void main(String[] args) {
+        UserCrud crud = new UserCrud();
+        System.out.println(crud.checkUsername("dd"));
+
         Scanner s = new Scanner(System.in);
 
         while (true) {
@@ -28,21 +34,22 @@ public class Main {
                 System.out.println("\t\t\t\t 3. List products");
                 System.out.println("\t\t\t\t 4. Check balance");
                 System.out.println("\t\t\t\t 5. Check shopping cart");
-                System.out.println("\t\t\t\t 6. Log out");
+                System.out.println("\t\t\t\t 6. User setting");
+                System.out.println("\t\t\t\t 7. Log out");
                 System.out.println("\t\t\t\t 0. EXIT");
                 System.out.println("\t\t\t\t**==============================================================**");
                 String answer = s.next();
                 if (answer.equals("1")) {
                     selling = true;
                     sell();
-                } else if (answer.equals("0")) {
-                    System.exit(0);
                 } else if (answer.equals("5")) {
                     checkingShoppingCart = true;
                     shoppingCart();
-                }  else if (answer.equals("6")) {
+                }  else if (answer.equals("7")) {
                     loggedIn = false;
                     activeUser = null;
+                }  else if (answer.equals("0")) {
+                    System.exit(0);
                 }
             }
         }
