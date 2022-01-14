@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Arrays;
 
 public class Product implements Serializable{
     //----------------------------------\\
@@ -15,6 +16,8 @@ public class Product implements Serializable{
     private String category;
 
     private String ownerName;
+
+    File Productfolder = new File("Testu\\PRODUCTS");
     //----------------------------------\\
     public Product(String productName, String description, Double price, int stockCount, int salesCount,String category, String ownerName) {
         this.productName = productName;
@@ -65,6 +68,68 @@ public class Product implements Serializable{
         user.setShoppingCart(newShoppingCart);
         User.SaveToFile(user);
     }
+
+    //to display product info, this is temporary, can be changed according to need
+    public void ProductDisplay(){
+        System.out.println("* Product: "+this.productName);
+        System.out.println("* Price: "+this.price);
+        System.out.println("* Category: "+this.category);
+        System.out.println("* Seller: "+this.ownerName);
+        System.out.println("* Stock: "+this.stockCount);
+//        System.out.println("* Product ratings: * * * * ("+this.salesCount+")");
+        System.out.println("* Description:\n"+this.description);
+        System.out.println("* Product Reviews:");
+        for (String review : this.reviews) {
+            System.out.println("----------------------------------------------------------------------------------------");
+            System.out.println(review);
+        }
+        System.out.println("---------------------------------------------------------------------------------------------");
+
+    }
+
+    public Product[] sortAZ(){
+        int i = 0;
+        int length = Productfolder.listFiles().length;
+        Product[] Parr = new Product[length];
+        for(File fileEntry : Productfolder.listFiles()){
+            Product p = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
+            Parr[i] = p;
+            i++;
+        }
+
+        //sorting alphabetically
+        Arrays.sort(Parr, (a, b) -> a.productName.compareTo(b.productName));
+
+        int j = 1;
+        for (Product p:Parr){
+            System.out.println(j+". "+p.productName);
+            j++;
+        }
+        return Parr;
+    }
+
+
+    public Product[] displayCategory(String category, Boolean sort){
+        int i = 0;
+        int length = Productfolder.listFiles().length;
+        Product[] Parr = new Product[length];
+        for(File fileEntry : Productfolder.listFiles()){
+            Product p = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
+            if (p.category.equalsIgnoreCase(category)){
+                Parr[i] = p;
+                i++;
+            }
+        }
+        if (sort){Arrays.sort(Parr, (a,b) -> a.productName.compareTo(b.productName));}
+        int j = 1;
+        for (Product p:Parr){
+            System.out.println(j+". "+p.productName);
+            j++;
+        }
+        return Parr;
+    }
+
+
     //----------------------------------\\
 
     public String getProductName() {
