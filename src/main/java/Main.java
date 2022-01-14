@@ -139,7 +139,14 @@ public class Main {
                 price = Double.parseDouble(s.next());
                 System.out.println("Please type the product stock count:");
                 stockCount = Integer.parseInt(s.next());
-                Product createdProduct = new Product(productName,description,price,stockCount,salescount,activeUser.getUsername());
+                System.out.println("Please choose the product category:");
+                System.out.println("1. Sports and outdoor");
+                System.out.println("2. Games and Hobbies");
+                System.out.println("3. Machines and Gadgets");
+                System.out.println("4. Fashion and Accessories (men)");
+
+                String category = s.next();
+                Product createdProduct = new Product(productName,description,price,stockCount,salescount,category,activeUser.getUsername());
                 Product.SaveToFile(createdProduct);
                 User.SaveToFile(activeUser);
 
