@@ -12,7 +12,7 @@ public class Main {
         Scanner s = new Scanner(System.in);
         System.out.println(activeUser.getUsername()+" is logged in.");
         mainscreen();
-        Product prod = Product.ReadFromFile("C:\\Testu\\PRODUCTS\\Pencil");
+        Product prod = Product.ReadFromFile("../../../testu/PRODUCTS/Pencil");
         //todo: fix the shopping cart
        // prod.putIntoCart(activeUser);
         while(loggedIn){
@@ -36,12 +36,11 @@ public class Main {
             if(answer.equals("5")){
                 checkingShoppingCart=true;
                 shoppingCart();
-
             }
 
         }
-
     }
+
     public static User greetingscreen(){
         Scanner s = new Scanner(System.in);
         User blankUser = new User("Guest","Guest", "Guest");
@@ -60,6 +59,7 @@ public class Main {
         }
         return blankUser;
     }
+
     public static User login(){
         String username;
         String password;
@@ -72,7 +72,7 @@ public class Main {
         username = s.next();
         System.out.println("Please enter your password: ");
         password = s.next();
-        File folder = new File("Testu\\USERNAMES");
+        File folder = new File("../../../testu/USERNAMES");
         for(File fileEntry : folder.listFiles()){
             User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
             if(username.equals(u.getUsername()) && password.equals(u.getPassword())) {
@@ -95,7 +95,7 @@ public class Main {
         String username;
         String password;
         String email;
-        File folder = new File("Testu\\USERNAMES");
+        File folder = new File("../../../testu/USERNAMES");
         System.out.println("Please enter your username: ");
         username = s.next();
         for(File fileEntry : folder.listFiles()){
@@ -119,8 +119,6 @@ public class Main {
 
         User user = new User(username, password, email);
         User.SaveToFile(user);
-
-
 
         login();
     }
@@ -181,7 +179,7 @@ public class Main {
 
             }
             if(answer.equals("2")){
-                File folder = new File("C:\\Testu\\PRODUCTS");
+                File folder = new File("../../../testu/PRODUCTS");
                 System.out.println("\t\t\t\t =======BELOW LIE YOUR PRODUCTS=========");
 
                 for(File fileEntry : folder.listFiles()){
@@ -192,7 +190,7 @@ public class Main {
 //todo: implement categories(!)
             }
             if(answer.equals("3")){
-                File folder = new File("Testu\\PRODUCTS");
+                File folder = new File("../../../testu/PRODUCTS");
                 System.out.println("\t\t\t\t =======BELOW LIE YOUR PRODUCTS=========");
                 Scanner scanner = new Scanner(System.in);
                 String ans;

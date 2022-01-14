@@ -17,7 +17,7 @@ public class Product implements Serializable{
 
     private String ownerName;
 
-    File Productfolder = new File("Testu\\PRODUCTS");
+    File Productfolder = new File("../../../testu/PRODUCTS");
     //----------------------------------\\
     public Product(String productName, String description, Double price, int stockCount, int salesCount,String category, String ownerName) {
         this.productName = productName;
@@ -36,7 +36,7 @@ public class Product implements Serializable{
 
     public static void SaveToFile(Product product){   //add filepath as a parameter
         try{
-            FileOutputStream fileOut = new FileOutputStream("Testu\\PRODUCTS\\"+product.productName);
+            FileOutputStream fileOut = new FileOutputStream("../../../testu/PRODUCTS/"+product.productName);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(product);
             objectOut.close();
