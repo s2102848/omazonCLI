@@ -23,7 +23,7 @@ public class User implements Serializable{
   //  private Product[] productsList;
     private String[] transactionHistory;
     private String[] orderNotifications;
-    @Serial
+
     private static final long serialVersionUID = 1L;
     private String[] shoppingCart = new String[100];
 

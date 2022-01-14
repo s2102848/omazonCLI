@@ -56,7 +56,7 @@ public class Main {
         } else if(s.next().equals("2")){
             register();
         }else{
-
+            System.exit(0);
         }
         return blankUser;
     }
@@ -68,9 +68,11 @@ public class Main {
         System.out.println("\t\t\t\t**==============================================================**");
         System.out.println("\t\t\t\t Welcome user! Please enter your username and then password");
         System.out.println("\t\t\t\t**==============================================================**");
+        System.out.println("Please enter your username: ");
         username = s.next();
+        System.out.println("Please enter your password: ");
         password = s.next();
-        File folder = new File("C:\\Testu\\USERNAMES");
+        File folder = new File("Testu\\USERNAMES");
         for(File fileEntry : folder.listFiles()){
             User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
             if(username.equals(u.getUsername()) && password.equals(u.getPassword())) {
@@ -93,19 +95,34 @@ public class Main {
         String username;
         String password;
         String email;
+        File folder = new File("Testu\\USERNAMES");
         System.out.println("Please enter your username: ");
         username = s.next();
+        for(File fileEntry : folder.listFiles()){
+            User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
+            if(username.equals(u.getUsername())){
+                System.out.println("Username taken.");
+                register();
+            }
+        }
         System.out.println("Please enter your password: ");
         password = s.next();
         System.out.println("Please enter your email: ");
         email = s.next();
+        for(File fileEntry : folder.listFiles()){
+            User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
+            if(username.equals(u.getEmail())){
+                System.out.println("Email taken.");
+                register();
+            }
+        }
 
         User user = new User(username, password, email);
         User.SaveToFile(user);
 
 
 
-
+        login();
     }
     public static void mainscreen(){
         System.out.println("\t\t\t\t**==============================================================**");
@@ -121,12 +138,13 @@ public class Main {
             System.out.println("\t\t\t\t 2. View existing listings");
             System.out.println("\t\t\t\t 3. Edit existing listings");
             System.out.println("\t\t\t\t 4. Go back");
-            System.out.println("\t\t\t\t 5. Exit");
+            System.out.println("\t\t\t\t 0. Exit");
             System.out.println("\t\t\t\t**==============================================================**");
             String answer = s.next();
             if(answer.equals("1")){
                 String productName;
                 String description;
+                String category;
                 double price;
                 int stockCount;
                 int salescount = 0;
@@ -134,18 +152,28 @@ public class Main {
                 System.out.println("Please type the product name:");
                 productName = s.next();
                 System.out.println("Please type the product description:");
-                description = s.next();
+                String catchline = s.nextLine();
+                description = s.nextLine();
                 System.out.println("Please type the product price:");
                 price = Double.parseDouble(s.next());
                 System.out.println("Please type the product stock count:");
                 stockCount = Integer.parseInt(s.next());
-                System.out.println("Please choose the product category:");
-                System.out.println("1. Sports and outdoor");
-                System.out.println("2. Games and Hobbies");
-                System.out.println("3. Machines and Gadgets");
-                System.out.println("4. Fashion and Accessories (men)");
 
-                String category = s.next();
+
+                //category
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.println("\t\t\t\tCategories:");
+                System.out.println("\t\t\t\t 1. Sports and Outdoor");
+                System.out.println("\t\t\t\t 2. Games and Hobbies");
+                System.out.println("\t\t\t\t 3. Machines and Gadgets");
+                System.out.println("\t\t\t\t 4. Fashion and Accessories (men)");
+                System.out.println("\t\t\t\t 5. Fashion and Accessories (women)");
+                System.out.println("\t\t\t\t 6. Home and Living");
+                System.out.println("\t\t\t\t 0. Other");
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.println("Choose a category for your products:");
+                category=s.next();
+                //-------------------------------//
                 Product createdProduct = new Product(productName,description,price,stockCount,salescount,category,activeUser.getUsername());
                 Product.SaveToFile(createdProduct);
                 User.SaveToFile(activeUser);
@@ -164,7 +192,7 @@ public class Main {
 //todo: implement categories(!)
             }
             if(answer.equals("3")){
-                File folder = new File("C:\\Testu\\PRODUCTS");
+                File folder = new File("Testu\\PRODUCTS");
                 System.out.println("\t\t\t\t =======BELOW LIE YOUR PRODUCTS=========");
                 Scanner scanner = new Scanner(System.in);
                 String ans;
@@ -174,28 +202,45 @@ public class Main {
                         System.out.println(p.getProductName());
                 }
                 System.out.println("\t\t\t\t =======WRITE THE FULL NAME OF PRODUCT TO EDIT=========");
+                System.out.println("\t\t\t\t Enter 0 to go back");
                 ans = s.next();
-                for(File fileEntry : folder.listFiles()){
-                    Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
-                    if(p.getOwnerName().equals(activeUser.getUsername()) && p.getProductName().equals(ans)){
-                        String description;
-                        double price;
-                        int stockCount;
+                if(ans.equals("0")){
+                    sell();
+                }else{
+                    for(File fileEntry : folder.listFiles()){
+                        Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
+                        if(p.getOwnerName().equals(activeUser.getUsername()) && p.getProductName().equals(ans)){
+                            String description, category;
+                            double price;
+                            int stockCount;
 
-                        System.out.println("Please type the product description:");
-                        description = s.next();
-                        System.out.println("Please type the product price:");
-                        price = Double.parseDouble(s.next());
-                        System.out.println("Please type the product stock count:");
-                        stockCount = Integer.parseInt(s.next());
-                        p.setDescription(description);
-                        p.setPrice(price);
-                        p.setStockCount(stockCount);
-                        Product.SaveToFile(p);
+                            System.out.println("Please type the product description:");
+                            String catchline = s.nextLine();
+                            description = s.nextLine();
+                            System.out.println("Please type the product price:");
+                            price = Double.parseDouble(s.next());
+                            System.out.println("Please type the product stock count:");
+                            stockCount = Integer.parseInt(s.next());
 
+                            System.out.println("\t\t\t\t**==============================================================**");
+                            System.out.println("\t\t\t\tCategories:");
+                            System.out.println("\t\t\t\t 1. Sports and Outdoor");
+                            System.out.println("\t\t\t\t 2. Games and Hobbies");
+                            System.out.println("\t\t\t\t 3. Machines and Gadgets");
+                            System.out.println("\t\t\t\t 4. Fashion and Accessories (men)");
+                            System.out.println("\t\t\t\t 5. Fashion and Accessories (women)");
+                            System.out.println("\t\t\t\t 6. Home and Living");
+                            System.out.println("\t\t\t\t 0. Other");
+                            System.out.println("\t\t\t\t**==============================================================**");
+                            System.out.println("Choose a category for your products:");
+                            category=s.next();
 
-
-                    }
+                            p.setCategory(category);
+                            p.setDescription(description);
+                            p.setPrice(price);
+                            p.setStockCount(stockCount);
+                            Product.SaveToFile(p);
+                }
 
                 }
 
@@ -206,6 +251,8 @@ public class Main {
 
         }
     }
+
+}
     public static void shoppingCart(){
         while(loggedIn&&checkingShoppingCart){
             Scanner s = new Scanner(System.in);
@@ -223,4 +270,5 @@ public class Main {
 
         }
     }
+
 }
