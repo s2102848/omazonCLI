@@ -70,7 +70,7 @@ public class Product implements Serializable{
     }
 
     //to display product info, this is temporary, can be changed according to need
-    public void ProductDisplay(){
+    public void productDisplay(){
         System.out.println("* Product: "+this.productName);
         System.out.println("* Price: "+this.price);
         System.out.println("* Category: "+this.category);
@@ -87,7 +87,7 @@ public class Product implements Serializable{
 
     }
 
-    public Product[] sortAZ(){
+    public Product[] sortAZ(Boolean descending){//if in case you want to sort it in descending order
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
@@ -98,18 +98,19 @@ public class Product implements Serializable{
         }
 
         //sorting alphabetically
-        Arrays.sort(Parr, (a, b) -> a.productName.compareTo(b.productName));
+        if (!descending)Arrays.sort(Parr, (a, b) -> a.productName.compareTo(b.productName));
+        else Arrays.sort(Parr, (a, b) -> b.productName.compareTo(a.productName));
 
         int j = 1;
         for (Product p:Parr){
-            System.out.println(j+". "+p.productName);
+            System.out.println(j+". "+p.productName + ", RM "+p.price);
             j++;
         }
         return Parr;
     }
 
 
-    public Product[] displayCategory(String category, Boolean sort){
+    public Product[] displayCategory(String category, Boolean sortPrice){
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
@@ -120,13 +121,75 @@ public class Product implements Serializable{
                 i++;
             }
         }
-        if (sort){Arrays.sort(Parr, (a,b) -> a.productName.compareTo(b.productName));}
+        //sorts according to price
+        if (sortPrice){Arrays.sort(Parr, (a,b) -> (int)(a.price - b.price));}
         int j = 1;
         for (Product p:Parr){
-            System.out.println(j+". "+p.productName);
+            System.out.println(j+". "+p.productName+ ", RM "+p.price);
             j++;
         }
         return Parr;
+    }
+
+    public Product[] sortPrice(Boolean descending){//if in case you want to sort it in descending order
+        int i = 0;
+        int length = Productfolder.listFiles().length;
+        Product[] Parr = new Product[length];
+        for(File fileEntry : Productfolder.listFiles()){
+            Product p = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
+            Parr[i] = p;
+            i++;
+        }
+
+        //sorting according to price
+        if (!descending)Arrays.sort(Parr, (a, b) -> (int)(a.price - b.price));
+        else Arrays.sort(Parr, (a, b) -> (int)(b.price - a.price));
+
+        int j = 1;
+        for (Product p:Parr){
+            System.out.println(j+". "+p.productName + ", RM "+p.price);
+            j++;
+        }
+        return Parr;
+    }
+    
+    public void updateProduct(Product p, int quantityBought){
+        int currentStockCount = p.stockCount;
+        if (quantityBought>currentStockCount) System.out.println("Warning!: Only "+currentStockCount+" left in Stock");
+        else {
+            p.stockCount = currentStockCount - quantityBought;
+            p.salesCount = currentStockCount + quantityBought;
+        }
+    }
+    public void updateProduct(Product p, String newReview){
+        String[] temp = new String[newReview.length()+1];
+        int i = 0;
+        for (String r:p.reviews){
+            temp[i] = r;
+            i++;
+        }
+        temp[i]= newReview;
+    }
+    public void printBestSelling(Boolean descending, int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
+        int i = 0;
+        int length = Productfolder.listFiles().length;
+        Product[] Parr = new Product[length];
+        for(File fileEntry : Productfolder.listFiles()){
+            Product p = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
+            Parr[i] = p;
+            i++;
+        }
+
+        //sorting according to salesCount
+        if (!descending)Arrays.sort(Parr, (a, b) -> (int)(a.salesCount - b.salesCount));
+        else Arrays.sort(Parr, (a, b) -> (int)(b.salesCount - a.salesCount));
+
+        int j = 1;
+        for (Product p:Parr){
+            System.out.println(j+". "+p.productName + ", RM "+p.price);
+            j++;
+            if (j == top_n+1) break;
+        }
     }
 
 
@@ -198,30 +261,14 @@ public class Product implements Serializable{
     //Category
     public void setCategory(String choice){
         switch (choice) {
-            case "1":
-                this.category = "Sports and Outdoor";
-            break;
-            case "2":
-                this.category = "Games and Hobbies";
-            break;
-            case "3":
-                this.category = "Machines and Gadgets";
-            break;
-            case "4":
-                this.category = "Fashion and Accessories (men)";
-            break;
-            case "5":
-                this.category = "Fashion and Accessories (women)";
-            break;
-            case "6":
-                this.category = "Home and Living";
-            break;
-            case "0":
-                this.category = "Other";
-            break;
-            default:
-                this.category = "Other";
-            break;
+            case "1" -> this.category = "Sports and Outdoor";
+            case "2" -> this.category = "Games and Hobbies";
+            case "3" -> this.category = "Machines and Gadgets";
+            case "4" -> this.category = "Fashion and Accessories (men)";
+            case "5" -> this.category = "Fashion and Accessories (women)";
+            case "6" -> this.category = "Home and Living";
+            case "0" -> this.category = "Other";
+            default -> this.category = "Other";
         }
     }
     public String getCategory() {
