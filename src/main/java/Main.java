@@ -13,11 +13,11 @@ public class Main {
         Scanner s = new Scanner(System.in);
         System.out.println(activeUser.getUsername()+" is logged in.");
         mainscreen();
-        Product prod = Product.ReadFromFile("testu\\PRODUCTS\\Pencil");
+     //   Product prod = Product.ReadFromFile("testu\\PRODUCTS\\Pencil");
         //todo: fix the shopping cart
-        prod.putIntoCart(activeUser);
-        prod = Product.ReadFromFile("testu\\PRODUCTS\\dragon");
-        prod.putIntoCart(activeUser);
+     //   prod.putIntoCart(activeUser);
+     //   prod = Product.ReadFromFile("testu\\PRODUCTS\\dragon");
+     //   prod.putIntoCart(activeUser);
         while(loggedIn){
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Current user: "+activeUser.getUsername()+"!");
