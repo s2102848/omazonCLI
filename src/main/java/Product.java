@@ -1,4 +1,5 @@
 
+
 import java.io.*;
 import java.util.Arrays;
 import java.util.regex.*;
@@ -18,7 +19,7 @@ public class Product implements Serializable{
 
     private String ownerName;
 
-    static File Productfolder = new File("C:\\Testu\\PRODUCTS");
+    File Productfolder = new File("Testu\\PRODUCTS");
     //----------------------------------\\
     public Product(String productName, String description, Double price, int stockCount, int salesCount,String category, String ownerName) {
         this.productName = productName;
@@ -84,11 +85,11 @@ public class Product implements Serializable{
             System.out.println("----------------------------------------------------------------------------------------");
             System.out.println(review);
         }
-        System.out.println("----------------------------------------------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------------------------------");
 
     }
 
-    public static Product[] sortAZ(Boolean descending){//if in case you want to sort it in descending order
+    public Product[] sortAZ(Boolean descending){//if in case you want to sort it in descending order
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
@@ -110,33 +111,29 @@ public class Product implements Serializable{
         return Parr;
     }
     @SuppressWarnings("empty-statement")
-    public static void SearchForProduct(String productOrSellerName){
+    public void SearchForProduct(String productOrSellerName){
         int i = 0;
-        int j = 0;
-        String c = "(.*)";
-
-        productOrSellerName.toLowerCase();
-
         int length = Productfolder.listFiles().length;
         String[] productNameList = new String[length];
         String[] sellerNameList = new String[length];
-
         for(File fileEntry : Productfolder.listFiles()){
             Product k = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
             productNameList[i] = k.getProductName();
             sellerNameList[i]=k.getOwnerName();
             i++;
-            productNameList[i].toLowerCase();
-            sellerNameList[i].toLowerCase();
-            if (productNameList[i].matches(c+productOrSellerName+c)) {
-                System.out.println(j+". "+k.getProductName()+ ", RM "+k.getPrice());
-                j++;
-            }else if (sellerNameList[i].matches(c+productOrSellerName+c)) {
-                System.out.println(j+". "+k.getProductName()+ ", RM "+k.getPrice()+", Seller: "+k.getOwnerName());
-                j++;
+        for(int l=0; l<productNameList.length-1;l++){
+            if(productNameList[l].equalsIgnoreCase(productOrSellerName)){
+            
+                System.out.println("Product: "+ productName);
+            }else if(sellerNameList[l].equalsIgnoreCase(productOrSellerName))
+                System.out.println("Seller: "+ownerName);
+            else{
+                System.out.println("Product or Seller Not Found");
             }
+                
         }
-        if (j == 0) System.out.println("Product or Seller Not Found");
+
+            }
     }
 
     
@@ -149,7 +146,7 @@ public class Product implements Serializable{
 
 
 
-    public static Product[] displayCategory(String category, Boolean sortPrice){
+    public Product[] displayCategory(String category, Boolean sortPrice){
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
@@ -170,7 +167,7 @@ public class Product implements Serializable{
         return Parr;
     }
 
-    public static Product[] sortPrice(Boolean descending){//if in case you want to sort it in descending order
+    public Product[] sortPrice(Boolean descending){//if in case you want to sort it in descending order
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
@@ -192,25 +189,22 @@ public class Product implements Serializable{
         return Parr;
     }
     
-    public void updateProduct(int quantityBought){
-        int currentStockCount = this.stockCount;
+    public void updateProduct(Product p, int quantityBought){
+        int currentStockCount = p.stockCount;
         if (quantityBought>currentStockCount) System.out.println("Warning!: Only "+currentStockCount+" left in Stock");
         else {
-            this.stockCount = currentStockCount - quantityBought;
-            this.salesCount = currentStockCount + quantityBought;
-            SaveToFile(this);
+            p.stockCount = currentStockCount - quantityBought;
+            p.salesCount = currentStockCount + quantityBought;
         }
     }
-    public void updateProduct(String newReview){
-        String[] temp = new String[(this.reviews).length+1];
+    public void updateProduct(Product p, String newReview){
+        String[] temp = new String[newReview.length()+1];
         int i = 0;
-        for (String r:this.reviews){
+        for (String r:p.reviews){
             temp[i] = r;
             i++;
         }
         temp[i]= newReview;
-        this.reviews = temp;
-        SaveToFile(this);
     }
     public void printBestSelling(int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
         int i = 0;
@@ -251,7 +245,6 @@ public class Product implements Serializable{
 
     public void setDescription(String description) {
         this.description = description;
-        SaveToFile(this);
     }
 
     public Double getPrice() {
@@ -260,7 +253,6 @@ public class Product implements Serializable{
 
     public void setPrice(Double price) {
         this.price = price;
-        SaveToFile(this);
     }
 
     public int getStockCount() {
@@ -269,7 +261,6 @@ public class Product implements Serializable{
 
     public void setStockCount(int stockCount) {
         this.stockCount = stockCount;
-        SaveToFile(this);
     }
 
     public int getSalesCount() {
@@ -278,7 +269,6 @@ public class Product implements Serializable{
 
     public void setSalesCount(int salesCount) {
         this.salesCount = salesCount;
-        SaveToFile(this);
     }
 
     public String[] getReviews() {
@@ -295,7 +285,6 @@ public class Product implements Serializable{
 
     public void setBestSelling(Boolean bestSelling) {
         this.bestSelling = bestSelling;
-        SaveToFile(this);
     }
     public String getOwnerName() {
         return ownerName;
@@ -303,7 +292,6 @@ public class Product implements Serializable{
 
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
-        SaveToFile(this);
     }
 
     //Category
@@ -317,9 +305,7 @@ public class Product implements Serializable{
             case "6" : this.category = "Home and Living";
             case "0" : this.category = "Other";
             default : this.category = "Other";
-
         }
-        SaveToFile(this);
     }
     public String getCategory() {
         return category;

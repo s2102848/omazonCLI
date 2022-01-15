@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -6,15 +7,18 @@ public class Main {
     public static boolean loggedIn=false;
     public static boolean selling=false;
     public static boolean checkingShoppingCart=false;
+    public static boolean managingAccount = false;
     public static User activeUser = greetingscreen();
-    //todo: implement categories(!)
+
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         System.out.println(activeUser.getUsername()+" is logged in.");
         mainscreen();
-        Product prod = Product.ReadFromFile("C:\\Testu\\PRODUCTS\\Pencil");
+     //   Product prod = Product.ReadFromFile("testu\\PRODUCTS\\Pencil");
         //todo: fix the shopping cart
-       // prod.putIntoCart(activeUser);
+     //   prod.putIntoCart(activeUser);
+     //   prod = Product.ReadFromFile("testu\\PRODUCTS\\dragon");
+     //   prod.putIntoCart(activeUser);
         while(loggedIn){
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Current user: "+activeUser.getUsername()+"!");
@@ -23,6 +27,7 @@ public class Main {
             System.out.println("\t\t\t\t 3. List products");
             System.out.println("\t\t\t\t 4. Check balance");
             System.out.println("\t\t\t\t 5. Check shopping cart");
+            System.out.println("\t\t\t\t 7. Manage the account");
             System.out.println("\t\t\t\t 0. EXIT");
             System.out.println("\t\t\t\t**==============================================================**");
             String answer = s.next();
@@ -37,6 +42,10 @@ public class Main {
                 checkingShoppingCart=true;
                 shoppingCart();
 
+            }
+            if(answer.equals("7")){
+                managingAccount=true;
+                manageaccount();
             }
 
         }
@@ -150,7 +159,7 @@ public class Main {
                 double price;
                 int stockCount;
                 int salescount = 0;
-                //todo: implement categories(!)
+
                 System.out.println("Please type the product name:");
                 productName = s.next();
                 System.out.println("Please type the product description:");
@@ -191,7 +200,7 @@ public class Main {
                     if(p.getOwnerName().equals(activeUser.getUsername()))
                     System.out.println(p.getProductName());
                 }
-//todo: implement categories(!)
+
             }
             if(answer.equals("3")){
                 File folder = new File("Testu\\PRODUCTS");
@@ -268,13 +277,100 @@ public class Main {
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Below is the list of the products in your shopping cart!");
             System.out.println("\t\t\t\t**==============================================================**");
-            if(activeUser.getProductsInCart()==0){
-                System.out.println("\t\t\t\t There are no products at all yet. Add some to your cart.");
-            }else{
-                for(String string : activeUser.getShoppingCart()){
+
+            for(String string : activeUser.getShoppingCart()){
+                if(string == null){
+
+                }else{
                     System.out.println(string);
                 }
+
             }
+            System.out.println("\t\t\t\t Press 0 to go back");
+            answer = s.next();
+            if(answer.equals("0")){
+                checkingShoppingCart=false;
+            }else{
+                shoppingCart();
+            }
+        }
+    }
+    public static void manageaccount(){
+        while(loggedIn&&managingAccount){
+            Scanner s = new Scanner(System.in);
+            String answer;
+            System.out.println("\t\t\t\t**==============================================================**");
+            System.out.println("\t\t\t\t Editing the user: "+activeUser.getUsername()+"!");
+            System.out.println("\t\t\t\t 1. Edit username/password/email");
+            System.out.println("\t\t\t\t 2. Set payment password");
+            System.out.println("\t\t\t\t 3. Delete account");
+            System.out.println("\t\t\t\t 0. Go back");
+            System.out.println("\t\t\t\t**==============================================================**");
+            answer=s.next();
+
+            if(answer.equals("1")){
+                System.out.println("\t\t\t\t 1. Edit username");
+                System.out.println("\t\t\t\t 2. Edit password");
+                System.out.println("\t\t\t\t 3. Edit email");
+                System.out.println("\t\t\t\t 0. Go back");
+                answer=s.next();
+                if(answer.equals("1")){
+                    String oldUsername = activeUser.getUsername();
+                    File oldUser = new File("testu\\USERNAMES\\"+oldUsername);
+                    oldUser.delete(); //deletes the old user
+                    System.out.println("\t\t\t\t Enter a new username:");
+                    String newUsername=s.next();
+                    activeUser.setUsername(newUsername);
+                    User.SaveToFile(activeUser);
+                    System.out.println("\t\t\t\t Username changed successfully!");
+
+                }
+                if(answer.equals("2")){
+
+                    //todo: make it harder to change the password by requiring the last password
+                    System.out.println("\t\t\t\t Enter a new password");
+                    String newPassword=s.next();
+                    activeUser.setPassword(newPassword);
+                    User.SaveToFile(activeUser);
+                    System.out.println("\t\t\t\t Password changed successfully!");
+
+                }
+                if(answer.equals("3")){
+                    System.out.println("\t\t\t\t Please enter your password to confirm.");
+                    if(activeUser.getPassword().equals(s.next())){
+                        System.out.println("\t\t\t\t Please enter a new email address:");
+                        activeUser.setEmail(s.next());
+                        User.SaveToFile(activeUser);
+                        System.out.println("\t\t\t\t Email changed successfully!");
+
+
+                    }else{
+                        System.out.println("\t\t\t\t Wrong password! Please try again");
+                        manageaccount();
+                    }
+
+                }
+                if(answer.equals("0")){
+                    manageaccount();
+                }
+            }
+            if(answer.equals("3")){
+                System.out.println("\t\t\t\t Are you sure that you want to delete your account?");
+                System.out.println("\t\t\t\t Please enter your password to confirm.");
+                if(activeUser.getPassword().equals(s.next())){
+                    File thisUser = new File("testu\\USERNAMES\\"+activeUser.getUsername());
+                    thisUser.delete();
+                    loggedIn=false;
+                }else{
+                    System.out.println("\t\t\t\t Wrong password! Please try again");
+                    manageaccount();
+                }
+
+            }
+            if(answer.equals("0")){
+                managingAccount=false;
+            }
+
 
         }
     }
