@@ -334,7 +334,14 @@ public class Main {
                 }
             }
             if(answer.equals("2")){
-                //dostuff
+                System.out.println("\t\t\t\t Are you sure that you want to delete your account?");
+                System.out.println("\t\t\t\t Please enter your password to confirm.");
+                if(activeUser.getPassword().equals(s.next())){
+                    File thisUser = new File("testu\\USERNAMES\\"+activeUser.getUsername());
+                    thisUser.delete();
+                    loggedIn=false;
+                }
+
             }
             if(answer.equals("3")){
                 managingAccount=false;
