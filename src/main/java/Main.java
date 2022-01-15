@@ -7,6 +7,7 @@ public class Main {
     public static boolean loggedIn=false;
     public static boolean selling=false;
     public static boolean checkingShoppingCart=false;
+    public static boolean managingAccount = false;
     public static User activeUser = greetingscreen();
 
     public static void main(String[] args) {
@@ -26,6 +27,7 @@ public class Main {
             System.out.println("\t\t\t\t 3. List products");
             System.out.println("\t\t\t\t 4. Check balance");
             System.out.println("\t\t\t\t 5. Check shopping cart");
+            System.out.println("\t\t\t\t 7. Manage the account");
             System.out.println("\t\t\t\t 0. EXIT");
             System.out.println("\t\t\t\t**==============================================================**");
             String answer = s.next();
@@ -40,6 +42,10 @@ public class Main {
                 checkingShoppingCart=true;
                 shoppingCart();
 
+            }
+            if(answer.equals("7")){
+                managingAccount=true;
+                manageaccount();
             }
 
         }
@@ -285,6 +291,56 @@ public class Main {
             }else{
                 shoppingCart();
             }
+        }
+    }
+    public static void manageaccount(){
+        while(loggedIn&&managingAccount){
+            Scanner s = new Scanner(System.in);
+            String answer;
+            System.out.println("\t\t\t\t**==============================================================**");
+            System.out.println("\t\t\t\t Editing the user: "+activeUser.getUsername()+"!");
+            System.out.println("\t\t\t\t 1. Edit username/password");
+            System.out.println("\t\t\t\t 2. Delete account");
+            System.out.println("\t\t\t\t 3. Go back");
+            System.out.println("\t\t\t\t**==============================================================**");
+            answer=s.next();
+
+            if(answer.equals("1")){
+                System.out.println("\t\t\t\t 1. Edit username");
+                System.out.println("\t\t\t\t 2. Edit password");
+                System.out.println("\t\t\t\t 3. Go back");
+                answer=s.next();
+                if(answer.equals("1")){
+                    String oldUsername = activeUser.getUsername();
+                    File oldUser = new File("testu\\USERNAMES\\"+oldUsername);
+                    oldUser.delete(); //deletes the old user
+                    System.out.println("\t\t\t\t Enter a new username:");
+                    String newUsername=s.next();
+                    activeUser.setUsername(newUsername);
+                    User.SaveToFile(activeUser);
+
+                }
+                if(answer.equals("2")){
+
+                    //todo: make it harder to change the password by requiring the last password
+                    System.out.println("\t\t\t\t Enter a new password");
+                    String newPassword=s.next();
+                    activeUser.setPassword(newPassword);
+                    User.SaveToFile(activeUser);
+
+                }
+                if(answer.equals("3")){
+                    manageaccount();
+                }
+            }
+            if(answer.equals("2")){
+                //dostuff
+            }
+            if(answer.equals("3")){
+                managingAccount=false;
+            }
+
+
         }
     }
 
