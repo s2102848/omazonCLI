@@ -67,6 +67,7 @@ public class Product implements Serializable{
         }
         newShoppingCart[user.getProductsInCart()]=this.getProductName();
         user.setShoppingCart(newShoppingCart);
+        user.incrementProductsInCart();
         User.SaveToFile(user);
     }
 
