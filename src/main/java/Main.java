@@ -1,3 +1,4 @@
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -7,14 +8,14 @@ public class Main {
     public static boolean selling=false;
     public static boolean checkingShoppingCart=false;
     public static User activeUser = greetingscreen();
-    //todo: implement categories(!)
+
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         System.out.println(activeUser.getUsername()+" is logged in.");
         mainscreen();
         Product prod = Product.ReadFromFile("C:\\Testu\\PRODUCTS\\Pencil");
         //todo: fix the shopping cart
-       // prod.putIntoCart(activeUser);
+        prod.putIntoCart(activeUser);
         while(loggedIn){
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Current user: "+activeUser.getUsername()+"!");
@@ -148,7 +149,7 @@ public class Main {
                 double price;
                 int stockCount;
                 int salescount = 0;
-                //todo: implement categories(!)
+
                 System.out.println("Please type the product name:");
                 productName = s.next();
                 System.out.println("Please type the product description:");
@@ -189,7 +190,7 @@ public class Main {
                     if(p.getOwnerName().equals(activeUser.getUsername()))
                     System.out.println(p.getProductName());
                 }
-//todo: implement categories(!)
+
             }
             if(answer.equals("3")){
                 File folder = new File("Testu\\PRODUCTS");
@@ -266,14 +267,22 @@ public class Main {
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Below is the list of the products in your shopping cart!");
             System.out.println("\t\t\t\t**==============================================================**");
-            if(activeUser.getProductsInCart()==0){
-                System.out.println("\t\t\t\t There are no products at all yet. Add some to your cart.");
-            }else{
-                for(String string : activeUser.getShoppingCart()){
+
+            for(String string : activeUser.getShoppingCart()){
+                if(string == null){
+
+                }else{
                     System.out.println(string);
                 }
-            }
 
+            }
+            System.out.println("\t\t\t\t Press 0 to go back");
+            answer = s.next();
+            if(answer.equals("0")){
+                checkingShoppingCart=false;
+            }else{
+                shoppingCart();
+            }
         }
     }
 

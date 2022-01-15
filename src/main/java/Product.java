@@ -1,4 +1,4 @@
-package com.mycompany.omazoncli;
+
 
 import java.io.*;
 import java.util.Arrays;
@@ -62,7 +62,6 @@ public class Product implements Serializable{
 
     public void putIntoCart(User user){
         String[] newShoppingCart = new String[100];
-        User.initializeShoppingCart(newShoppingCart);
         for(int i=0; i<user.getShoppingCart().length;i++){
             newShoppingCart[i]=user.getShoppingCart()[i];
         }

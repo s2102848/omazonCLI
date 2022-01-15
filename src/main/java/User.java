@@ -39,11 +39,7 @@ public class User implements Serializable{
     public void setShoppingCart(String[] shoppingCart){
         this.shoppingCart = shoppingCart;
     }
-    public static void initializeShoppingCart(String[] shoppingCart){
-        for(int i=0; i<shoppingCart.length;i++){
-            shoppingCart[i]="";
-        }
-    }
+
     public String[] getShoppingCart(){
 
         return this.shoppingCart;
