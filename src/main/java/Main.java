@@ -80,12 +80,13 @@ public class Main {
                     return u;
             }else{
                 System.out.println("Wrong username or password!");
+                System.out.println("Retry!");
                 loggedIn=false;
+                greetingscreen();
             }
 
         }
     return blankUser;
-
     }
     public static void register(){
         Scanner s = new Scanner(System.in);
@@ -100,13 +101,12 @@ public class Main {
         username = s.next();
         for(File fileEntry : folder.listFiles()){
             User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
-            if(username.equals(u.getUsername())){
+            if(username.equalsIgnoreCase(u.getUsername())){
                 System.out.println("Username taken.");
                 register();
             }
         }
-        System.out.println("Please enter your password: ");
-        password = s.next();
+
         System.out.println("Please enter your email: ");
         email = s.next();
         for(File fileEntry : folder.listFiles()){
@@ -116,6 +116,8 @@ public class Main {
                 register();
             }
         }
+        System.out.println("Please enter your password: ");
+        password = s.next();
 
         User user = new User(username, password, email);
         User.SaveToFile(user);
