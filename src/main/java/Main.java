@@ -1,20 +1,15 @@
-import connect.DB;
-import connect.UserCrud;
-
 import java.io.File;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
     public static boolean loggedIn = false;
     public static boolean selling = false;
     public static boolean checkingShoppingCart = false;
+    public static boolean checkBalance = false;
     public static User activeUser = null;
 
     //todo: implement categories(!)
     public static void main(String[] args) {
-        UserCrud crud = new UserCrud();
-        System.out.println(crud.checkUsername("dd"));
 
         Scanner s = new Scanner(System.in);
 
@@ -22,7 +17,7 @@ public class Main {
             if (!loggedIn) {
                 greetingScreen();
             } else {
-                System.out.println(activeUser.getUsername() + " is logged in.\n");
+//                System.out.println(activeUser.getUsername() + " is logged in.\n");
                 mainscreen();
                 Product prod = Product.ReadFromFile("src/database/PRODUCTS/Pencil");
                 //todo: fix the shopping cart
@@ -42,13 +37,16 @@ public class Main {
                 if (answer.equals("1")) {
                     selling = true;
                     sell();
+                } else if (answer.equals("4")) {
+                    checkBalance = true;
+                    checkBalance();
                 } else if (answer.equals("5")) {
                     checkingShoppingCart = true;
                     shoppingCart();
-                }  else if (answer.equals("7")) {
+                } else if (answer.equals("7")) {
                     loggedIn = false;
                     activeUser = null;
-                }  else if (answer.equals("0")) {
+                } else if (answer.equals("0")) {
                     System.exit(0);
                 }
             }
@@ -57,17 +55,16 @@ public class Main {
 
     public static void greetingScreen() {
         Scanner s = new Scanner(System.in);
-        User blankUser = new User("Guest", "Guest", "Guest");
         System.out.println("\t\t\t\t============================================");
         System.out.println("\t\t\t\t Welcome user! Please login or register");
         System.out.println("\t\t\t\t 1. Login");
         System.out.println("\t\t\t\t 2. Register");
         System.out.println("\t\t\t\t Press any other key to quit.");
         System.out.println("\t\t\t\t============================================");
-        int option = s.nextInt();
-        if (option == 1) {
+        String option = s.next();
+        if (option.equals("1")) {
             login();
-        } else if (option == 2) {
+        } else if (option.equals("2")) {
             register();
         } else {
             System.exit(0);
@@ -78,6 +75,7 @@ public class Main {
         String username;
         String password;
         Scanner s = new Scanner(System.in);
+        User user = new User();
         System.out.println("\t\t\t\t**==============================================================**");
         System.out.println("\t\t\t\t Welcome user! Please enter your username and then password");
         System.out.println("\t\t\t\t**==============================================================**");
@@ -85,53 +83,41 @@ public class Main {
         username = s.next();
         System.out.println("Please enter your password: ");
         password = s.next();
-        File folder = new File("src/database/USERNAMES");
-        for (File fileEntry : Objects.requireNonNull(folder.listFiles())) {
-            User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
-            assert u != null;
-            if (username.equals(u.getUsername()) && password.equals(u.getPassword())) {
-                loggedIn = true;
-                activeUser = u;
-            }
-        }
 
-        if (!loggedIn) {
-            System.out.println("Wrong username or password! Please try again.\n");
-        }
+        activeUser = user.login(username, password);
+
+        loggedIn = activeUser != null;
     }
 
     public static void register() {
         Scanner s = new Scanner(System.in);
+        User user = new User();
         System.out.println("\t\t\t\t**==========================================================================**");
         System.out.println("\t\t\t\t Welcome user! Please enter your username, password, and email to register!");
         System.out.println("\t\t\t\t**==========================================================================**");
         String username;
         String password;
         String email;
-        File folder = new File("src/database/USERNAMES");
+
         System.out.println("Please enter your username: ");
         username = s.next();
-        for (File fileEntry : folder.listFiles()) {
-            User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
-            if (username.equals(u.getUsername())) {
-                System.out.println("Username taken.");
-                register();
-            }
+
+        if (user.checkUsername(username)) {
+            System.out.println("Username taken.");
+            register();
         }
+
         System.out.println("Please enter your password: ");
         password = s.next();
         System.out.println("Please enter your email: ");
         email = s.next();
-        for (File fileEntry : folder.listFiles()) {
-            User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
-            if (username.equals(u.getEmail())) {
-                System.out.println("Email taken.");
-                register();
-            }
+
+        if (user.checkEmail(email)) {
+            System.out.println("Email taken.");
+            register();
         }
 
-        User user = new User(username, password, email);
-        User.SaveToFile(user);
+        user.register(username, email, password);
 
         login();
     }
@@ -191,7 +177,6 @@ public class Main {
                 Product.SaveToFile(createdProduct);
                 User.SaveToFile(activeUser);
 
-
             }
             if (answer.equals("2")) {
                 File folder = new File("src/database/PRODUCTS");
@@ -199,8 +184,7 @@ public class Main {
 
                 for (File fileEntry : folder.listFiles()) {
                     Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
-                    if (p.getOwnerName().equals(activeUser.getUsername()))
-                        System.out.println(p.getProductName());
+                    if (p.getOwnerName().equals(activeUser.getUsername())) System.out.println(p.getProductName());
                 }
 //todo: implement categories(!)
             }
@@ -211,8 +195,7 @@ public class Main {
                 String ans;
                 for (File fileEntry : folder.listFiles()) {
                     Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
-                    if (p.getOwnerName().equals(activeUser.getUsername()))
-                        System.out.println(p.getProductName());
+                    if (p.getOwnerName().equals(activeUser.getUsername())) System.out.println(p.getProductName());
                 }
                 System.out.println("\t\t\t\t =======WRITE THE FULL NAME OF PRODUCT TO EDIT=========");
                 System.out.println("\t\t\t\t Enter 0 to go back");
@@ -291,4 +274,42 @@ public class Main {
         }
     }
 
+    public static void checkBalance() {
+        while (loggedIn && checkBalance) {
+            Scanner s = new Scanner(System.in);
+            System.out.println("\t\t\t\t**==============================================================**");
+            System.out.println("\t\t\t\tYour current account balance: " + String.format("%.2f", activeUser.getBalance()));
+            System.out.println("\t\t\t\t 1. Top up account balance");
+            System.out.println("\t\t\t\t 2. Go back");
+            System.out.println("\t\t\t\t 0. Exit");
+            System.out.println("\t\t\t\t**==============================================================**");
+
+            String option = s.next();
+
+            if (option.equals("1")) {
+                System.out.println("Please enter your credit card number: ");
+                String cardNumber = s.next();
+                if (cardNumber.length() != 12) {
+                    System.out.println("Please enter valid credit card number. (12 digit)");
+                    checkBalance();
+                }
+                System.out.println("Please enter your card expiry date: ");
+                String expiry= s.next();
+                System.out.println("Please enter your cvv number: ");
+                String cvv= s.next();
+                if (cvv.length() != 3) {
+                    System.out.println("Please enter valid cvv number. (3 digit)");
+                    checkBalance();
+                }
+                System.out.println("Card is valid! Please enter amount to top up.");
+                Double amount = s.nextDouble();
+                activeUser.topUpBalance(amount);
+                System.out.println("Top up successfull");
+            } else if (option.equals("2")) {
+                checkBalance = false;
+            } else {
+                System.exit(0);
+            }
+        }
+    }
 }
