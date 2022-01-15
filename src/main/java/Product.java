@@ -116,16 +116,18 @@ public class Product implements Serializable{
         int length = Productfolder.listFiles().length;
         String[] productNameList = new String[length];
         String[] sellerNameList = new String[length];
+        String str=productOrSellerName.trim();
         for(File fileEntry : Productfolder.listFiles()){
             Product k = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
             productNameList[i] = k.getProductName();
             sellerNameList[i]=k.getOwnerName();
             i++;
+        }
         for(int l=0; l<productNameList.length-1;l++){
-            if(productNameList[l].equalsIgnoreCase(productOrSellerName)){
+            if(productNameList[l].equalsIgnoreCase(str)){
             
                 System.out.println("Product: "+ productName);
-            }else if(sellerNameList[l].equalsIgnoreCase(productOrSellerName))
+            }else if(sellerNameList[l].equalsIgnoreCase(str))
                 System.out.println("Seller: "+ownerName);
             else{
                 System.out.println("Product or Seller Not Found");
@@ -133,16 +135,8 @@ public class Product implements Serializable{
                 
         }
 
-            }
+            
     }
-
-    
-    /* for (int i=0 ;i< size-1; i++){
-         if(array[i]==value){
-            System.out.println("Element found index is :"+ i);
-         }else{
-            System.out.println("Element not found");
-         }*/
 
 
 
