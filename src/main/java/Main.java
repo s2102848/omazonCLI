@@ -299,16 +299,18 @@ public class Main {
             String answer;
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Editing the user: "+activeUser.getUsername()+"!");
-            System.out.println("\t\t\t\t 1. Edit username/password");
-            System.out.println("\t\t\t\t 2. Delete account");
-            System.out.println("\t\t\t\t 3. Go back");
+            System.out.println("\t\t\t\t 1. Edit username/password/email");
+            System.out.println("\t\t\t\t 2. Set payment password");
+            System.out.println("\t\t\t\t 3. Delete account");
+            System.out.println("\t\t\t\t 0. Go back");
             System.out.println("\t\t\t\t**==============================================================**");
             answer=s.next();
 
             if(answer.equals("1")){
                 System.out.println("\t\t\t\t 1. Edit username");
                 System.out.println("\t\t\t\t 2. Edit password");
-                System.out.println("\t\t\t\t 3. Go back");
+                System.out.println("\t\t\t\t 3. Edit email");
+                System.out.println("\t\t\t\t 0. Go back");
                 answer=s.next();
                 if(answer.equals("1")){
                     String oldUsername = activeUser.getUsername();
@@ -318,6 +320,7 @@ public class Main {
                     String newUsername=s.next();
                     activeUser.setUsername(newUsername);
                     User.SaveToFile(activeUser);
+                    System.out.println("\t\t\t\t Username changed successfully!");
 
                 }
                 if(answer.equals("2")){
@@ -327,23 +330,42 @@ public class Main {
                     String newPassword=s.next();
                     activeUser.setPassword(newPassword);
                     User.SaveToFile(activeUser);
+                    System.out.println("\t\t\t\t Password changed successfully!");
 
                 }
                 if(answer.equals("3")){
+                    System.out.println("\t\t\t\t Please enter your password to confirm.");
+                    if(activeUser.getPassword().equals(s.next())){
+                        System.out.println("\t\t\t\t Please enter a new email address:");
+                        activeUser.setEmail(s.next());
+                        User.SaveToFile(activeUser);
+                        System.out.println("\t\t\t\t Email changed successfully!");
+
+
+                    }else{
+                        System.out.println("\t\t\t\t Wrong password! Please try again");
+                        manageaccount();
+                    }
+
+                }
+                if(answer.equals("0")){
                     manageaccount();
                 }
             }
-            if(answer.equals("2")){
+            if(answer.equals("3")){
                 System.out.println("\t\t\t\t Are you sure that you want to delete your account?");
                 System.out.println("\t\t\t\t Please enter your password to confirm.");
                 if(activeUser.getPassword().equals(s.next())){
                     File thisUser = new File("testu\\USERNAMES\\"+activeUser.getUsername());
                     thisUser.delete();
                     loggedIn=false;
+                }else{
+                    System.out.println("\t\t\t\t Wrong password! Please try again");
+                    manageaccount();
                 }
 
             }
-            if(answer.equals("3")){
+            if(answer.equals("0")){
                 managingAccount=false;
             }
 
