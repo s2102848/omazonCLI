@@ -88,11 +88,12 @@ public class Main {
                     loggedIn=true;
                     return u;
             }else{
-                System.out.println("Wrong username or password!");
+
                 loggedIn=false;
             }
 
         }
+        System.out.println("Wrong username or password!");
     return blankUser;
 
     }
@@ -325,12 +326,17 @@ public class Main {
                 }
                 if(answer.equals("2")){
 
-                    //todo: make it harder to change the password by requiring the last password
-                    System.out.println("\t\t\t\t Enter a new password");
-                    String newPassword=s.next();
-                    activeUser.setPassword(newPassword);
-                    User.SaveToFile(activeUser);
-                    System.out.println("\t\t\t\t Password changed successfully!");
+                    System.out.println("\t\t\t\t Please enter your password to confirm.");
+                    if(activeUser.getPassword().equals(s.next())) {
+                        System.out.println("\t\t\t\t Enter a new password");
+                        String newPassword = s.next();
+                        activeUser.setPassword(newPassword);
+                        User.SaveToFile(activeUser);
+                        System.out.println("\t\t\t\t Password changed successfully!");
+                    }else{
+                        System.out.println("\t\t\t\t Wrong password! Please try again");
+                        manageaccount();
+                    }
 
                 }
                 if(answer.equals("3")){
