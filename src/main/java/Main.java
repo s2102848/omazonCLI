@@ -118,21 +118,32 @@ public class Main {
         System.out.println("Please enter your password: ");
         password = s.next();
         System.out.println("Please enter your email: ");
+
         email = s.next();
-        for(File fileEntry : folder.listFiles()){
-            User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
-            if(username.equals(u.getEmail())){
-                System.out.println("Email taken.");
-                register();
+        if(checkEmail(email)){
+            for(File fileEntry : folder.listFiles()){
+                User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
+                if(username.equals(u.getEmail())){
+                    System.out.println("Email taken.");
+                    register();
+                }
             }
+
+            User user = new User(username, password, email);
+            User.SaveToFile(user);
+
+            login();
+
+        } else{
+            System.out.println("Invalid email address");
+            register();
+
         }
 
-        User user = new User(username, password, email);
-        User.SaveToFile(user);
 
 
 
-        login();
+
     }
     public static void mainscreen(){
         System.out.println("\t\t\t\t**==============================================================**");
@@ -377,6 +388,13 @@ public class Main {
 
 
         }
+    }
+    public static boolean checkEmail(String email){
+        //todo: maybe expand the check later
+        if(email.contains("@")&&email.contains(".com")){
+            return true;
+        }
+        return false;
     }
 
 }
