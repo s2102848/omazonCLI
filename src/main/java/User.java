@@ -202,7 +202,7 @@ public class User implements Serializable {
     }
 
     public void register(String username, String email, String password) {
-        String sql = "INSERT INTO Users(username,email, password) VALUES(?,?, ?)";
+        String sql = "INSERT INTO Users(username, email, password) VALUES(?,?,?)";
 
         try (Connection conn = DB.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
