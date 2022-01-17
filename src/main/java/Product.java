@@ -25,16 +25,12 @@ public class Product implements Serializable{
     //----------------------------------\\
     public Product(String productName, String description, Double price, int stockCount, int salesCount,String category, String ownerName) {
         this.productName = productName;
-
         this.description = description;
         this.price = price;
         this.stockCount = stockCount;
         this.salesCount = salesCount;
         setCategory(category);
-
         this.ownerName = ownerName;
-        //   this.reviews = reviews;
-        //    this.bestSelling = bestSelling;
     }
     //saveToFile
 
@@ -241,17 +237,11 @@ public class Product implements Serializable{
     public String getProductName() {
         return productName;
     }
-    public void setProductName(String productName) {
+    public void setProductName(String prodName) {
         Product prodWithPreviousName = this;
-        int length = Productfolder.listFiles().length;
-        Product[] Parr = new Product[length];
-        for(File fileEntry : Productfolder.listFiles()){
-            Product p = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
-            if (p.equals(prodWithPreviousName)){
-                fileEntry.delete();
-            }
-        }
-        prodWithPreviousName.productName = productName;
+        File thisProduct = new File("Testu\\USERNAMES\\"+prodWithPreviousName.getProductName());
+        thisProduct.delete();
+        prodWithPreviousName.productName = prodName;
         SaveToFile(prodWithPreviousName);
     }
 
