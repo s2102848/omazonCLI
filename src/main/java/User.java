@@ -226,6 +226,7 @@ public class User implements Serializable {
                 this.Username = rs.getString("username");
                 this.email = rs.getString("email");
                 this.Password = rs.getString("password");
+                this.paymentPassword = rs.getInt("payment_password");
                 this.balance = rs.getDouble("credit_balance");
                 return this;
             } else {

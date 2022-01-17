@@ -571,21 +571,26 @@ public class Main {
                 System.out.println("Please enter the delivery address");
                 String address = s.next();
 
-                OrderItem orderItems = new OrderItem(quantity, product);
-                OrderItem[] orders = new OrderItem[]{orderItems};
+                System.out.println("Please enter payment password");
+                int paymentPassword = s.nextInt();
+                if (activeUser.getPaymentPassword() == paymentPassword) {
+                    OrderItem orderItems = new OrderItem(quantity, product);
+                    OrderItem[] orders = new OrderItem[]{orderItems};
 
-                Order order = new Order(activeUser.getUsername(), product.getOwnerName(), address, orders);
-                product.alterStockCount(quantity);
+                    Order order = new Order(activeUser.getUsername(), product.getOwnerName(), address, orders);
+                    product.alterStockCount(quantity);
 
-                //if balance not enough validator
-                if (!(activeUser.getBalance() < order.getTotalPrice())) {
-                    order.saveToFile(order);
-                    activeUser.setBalance(order.deductWallet(activeUser.getBalance(), activeUser.getUsername()));
-                    System.out.println("Purchased successfully! Thank you, we will notify the seller to hip out your item.");
+                    //if balance not enough validator
+                    if (!(activeUser.getBalance() < order.getTotalPrice())) {
+                        order.saveToFile(order);
+                        activeUser.setBalance(order.deductWallet(activeUser.getBalance(), activeUser.getUsername()));
+                        System.out.println("Purchased successfully! Thank you, we will notify the seller to hip out your item.");
+                    } else {
+                        System.out.println("Balance is not enough! Please top up and try again.");
+                    }
                 } else {
-                    System.out.println("Balance is not enough! Please top up and try again.");
+                    System.out.println("Wrong payment password! Please try again.");
                 }
-
             }
             buyProduct = false;
         }
