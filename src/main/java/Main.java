@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.IOException;
 
 public class Main {
     public static boolean loggedIn = false;
@@ -131,6 +132,8 @@ public class Main {
             System.out.println("Invalid email address");
             register();
         }
+        System.out.println("Please enter your new password: ");
+        password = s.next();
 
         System.out.println("Please enter your payment password: ");
         paymentPassword = s.nextInt();
@@ -166,14 +169,14 @@ public class Main {
                 int stockCount;
                 int salescount = 0;
 
-                System.out.println("Please type the product name:");
+                System.out.print("Please type the product name:");
                 productName = s.next();
-                System.out.println("Please type the product description:");
+                System.out.print("Please type the product description:");
                 String catchline = s.nextLine();
                 description = s.nextLine();
-                System.out.println("Please type the product price:");
+                System.out.print("Please type the product price:");
                 price = Double.parseDouble(s.next());
-                System.out.println("Please type the product stock count:");
+                System.out.print("Please type the product stock count:");
                 stockCount = Integer.parseInt(s.next());
 
                 // category
@@ -205,17 +208,18 @@ public class Main {
                     if (p.getOwnerName().equals(activeUser.getUsername()))
                         System.out.println(p.getProductName());
                 }
-
             }
             if (answer.equals("3")) {
                 File folder = new File("src/database/PRODUCTS");
                 System.out.println("\t\t\t\t =======BELOW LIE YOUR PRODUCTS=========");
                 Scanner scanner = new Scanner(System.in);
                 String ans;
-                for (File fileEntry : folder.listFiles()) {
+                int i = 0;
+                for(File fileEntry : folder.listFiles()){
                     Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
-                    if (p.getOwnerName().equals(activeUser.getUsername()))
-                        System.out.println(p.getProductName());
+                    if(p.getOwnerName().equals(activeUser.getUsername()))
+                        System.out.println((i+1)+". "+p.getProductName());
+                        i++;
                 }
                 System.out.println("\t\t\t\t =======WRITE THE FULL NAME OF PRODUCT TO EDIT=========");
                 System.out.println("\t\t\t\t Enter 0 to go back");
@@ -225,11 +229,13 @@ public class Main {
                 } else {
                     for (File fileEntry : folder.listFiles()) {
                         Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
-                        if (p.getOwnerName().equals(activeUser.getUsername()) && p.getProductName().equals(ans)) {
+                        if(p.getOwnerName().equals(activeUser.getUsername()) && p.getProductName().equalsIgnoreCase(ans)){
                             String description, category;
                             double price;
                             int stockCount;
 
+                            System.out.println("Please type the product description:");
+                            String prodName = s.nextLine();
                             System.out.println("Please type the product description:");
                             String catchline = s.nextLine();
                             description = s.nextLine();
@@ -253,6 +259,7 @@ public class Main {
                             System.out.println("Choose a category for your products:");
                             category = s.next();
 
+                            p.setProductName(prodName);
                             p.setCategory(category);
                             p.setDescription(description);
                             p.setPrice(price);
@@ -308,73 +315,75 @@ public class Main {
 
             if (category.equals("0")) {
                 buyProduct = false;
-            }
+            } else {
+                if (!category.equals("8") && !category.equals("0")) {
+                    String categoryName;
+                    switch (category) {
+                        case "1":
+                            categoryName = "Sports and Outdoor";
+                            break;
+                        case "2":
+                            categoryName = "Games and Hobbies";
+                            break;
+                        case "3":
+                            categoryName = "Machines and Gadgets";
+                            break;
+                        case "4":
+                            categoryName = "Fashion and Accessories (men)";
+                            break;
+                        case "5":
+                            categoryName = "Fashion and Accessories (women)";
+                            break;
+                        case "6":
+                            categoryName = "Home and Living";
+                            break;
+                        default:
+                            categoryName = "Other";
+                            break;
+                    }
+                    System.out.println("Category: " + categoryName);
+                    File folder = new File("src/database/PRODUCTS");
+                    Scanner scanner = new Scanner(System.in);
+                    String ans;
+                    int index = 0;
+                    for (File fileEntry : folder.listFiles()) {
+                        Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
+                        if (p.getCategory().equals(categoryName) && (!p.getOwnerName().equals(activeUser.getUsername()))) {
+                            System.out.println(index + 1 + ". " + p.getProductName());
+                            products.add(p);
+                            index++;
+                        }
+                    }
+                    if (index == 0) {
+                        System.out.println("\t\t\t\tNo product in this category currently.");
+                    }
+                } else {
+                    File folder = new File("src/database/PRODUCTS");
+                    Scanner scanner = new Scanner(System.in);
+                    String ans;
+                    int index = 0;
+                    for (File fileEntry : folder.listFiles()) {
+                        Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
 
-            if (!category.equals("8") && !category.equals("0")) {
-                String categoryName;
-                switch (category) {
-                    case "1":
-                        categoryName = "Sports and Outdoor";
-                        break;
-                    case "2":
-                        categoryName = "Games and Hobbies";
-                        break;
-                    case "3":
-                        categoryName = "Machines and Gadgets";
-                        break;
-                    case "4":
-                        categoryName = "Fashion and Accessories (men)";
-                        break;
-                    case "5":
-                        categoryName = "Fashion and Accessories (women)";
-                        break;
-                    case "6":
-                        categoryName = "Home and Living";
-                        break;
-                    default:
-                        categoryName = "Other";
-                        break;
-                }
-                System.out.println("Category: " + categoryName);
-                File folder = new File("src/database/PRODUCTS");
-                Scanner scanner = new Scanner(System.in);
-                String ans;
-                int index = 0;
-                for (File fileEntry : folder.listFiles()) {
-                    Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
-                    if (p.getCategory().equals(categoryName) && (!p.getOwnerName().equals(activeUser.getUsername()))) {
-                        System.out.println(index + 1 + ". " + p.getProductName());
-                        products.add(p);
-                        index++;
+                        if (!p.getOwnerName().equals(activeUser.getUsername())) {
+                            System.out.println(index + 1 + ". " + p.getProductName());
+                            products.add(p);
+                            index++;
+                        }
                     }
                 }
-                if (index == 0) {
-                    System.out.println("\t\t\t\tNo product in this category currently.");
-                }
-            } else {
-                File folder = new File("src/database/PRODUCTS");
-                Scanner scanner = new Scanner(System.in);
-                String ans;
-                int index = 0;
-                for (File fileEntry : folder.listFiles()) {
-                    Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
 
-                    if (!p.getOwnerName().equals(activeUser.getUsername())) {
-                        System.out.println(index + 1 + ". " + p.getProductName());
-                        products.add(p);
-                        index++;
-                    }
+                System.out.println("Select product to buy.");
+                int option = s.nextInt();
+
+                if ((option - 1) < products.size()) {
+                    productDetail(products.get(option - 1));
+                } else {
+                    System.out.println("Product is not in list.");
                 }
             }
 
-            System.out.println("Select product to buy.");
-            int option = s.nextInt();
 
-            if ((option - 1) < products.size()) {
-                productDetail(products.get(option - 1));
-            } else {
-                System.out.println("Product is not in list.");
-            }
 
         }
     }
@@ -393,7 +402,6 @@ public class Main {
                 } else {
                     System.out.println(string);
                 }
-
             }
             System.out.println("\t\t\t\t Press 0 to go back");
             answer = s.next();
@@ -412,7 +420,7 @@ public class Main {
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Editing the user: " + activeUser.getUsername() + "!");
             System.out.println("\t\t\t\t 1. Edit username/password/email");
-            System.out.println("\t\t\t\t 2. Set payment password");
+            System.out.println("\t\t\t\t 2. Set/Edit payment password");
             System.out.println("\t\t\t\t 3. Delete account");
             System.out.println("\t\t\t\t 0. Go back");
             System.out.println("\t\t\t\t**==============================================================**");
@@ -425,13 +433,20 @@ public class Main {
                 System.out.println("\t\t\t\t 0. Go back");
                 answer = s.next();
                 if (answer.equals("1")) {
-                    System.out.println("\t\t\t\t Enter a new username:");
-                    String newUsername = s.next();
-                    activeUser.updateUsername(newUsername);
-                    System.out.println("\t\t\t\t Username changed successfully!");
+                    System.out.println("Please enter your password to confirm.");
+                    if(activeUser.getPassword().equals(s.next())){
+                        System.out.println("\t\t\t\t Enter a new username:");
+                        String newUsername = s.next();
+                        activeUser.updateUsername(newUsername);
+                        System.out.println("\t\t\t\t Username changed successfully!");
+                    }else{
+                        System.out.println("Wrong password! Please try again");
+                        manageAccount();
+                    }
                 }
                 if (answer.equals("2")) {
-                    System.out.println("\t\t\t\t Please enter your password to confirm.");
+                    //todo: make it harder to change the password by requiring the last password
+                    System.out.println("\t\t\t\t Please enter your old password.");
                     if (activeUser.getPassword().equals(s.next())) {
                         System.out.println("\t\t\t\t Enter a new password");
                         String newPassword = s.next();
@@ -584,7 +599,7 @@ public class Main {
                     if (!(activeUser.getBalance() < order.getTotalPrice())) {
                         order.saveToFile(order);
                         activeUser.setBalance(order.deductWallet(activeUser.getBalance(), activeUser.getUsername()));
-                        System.out.println("Purchased successfully! Thank you, we will notify the seller to hip out your item.");
+                        System.out.println("Purchased successfully! Thank you, we will notify the seller to ship out your item.");
                     } else {
                         System.out.println("Balance is not enough! Please top up and try again.");
                     }

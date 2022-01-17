@@ -12,7 +12,8 @@ public class User implements Serializable {
     private String Username;
     private String Password;
     private String email;
-    // Customer
+    File Productfolder = new File("src/database/PRODUCTS/");
+    //Customer
     private double balance;
     private Product[] cartProduct;
     private OrderItem[] orderHistory;
@@ -97,18 +98,18 @@ public class User implements Serializable {
     }
 
     // Basic info
+
     public String getUsername() {
         return Username;
     }
 
-    public void setUsername(String Username) {
-        this.Username = Username;
+    public void setUsername(String newUsername) {
+        this.Username = newUsername;
     }
 
     public String getPassword() {
         return Password;
     }
-
     public void setPassword(String Password) {
         this.Password = Password;
     }
@@ -116,7 +117,6 @@ public class User implements Serializable {
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
@@ -126,17 +126,17 @@ public class User implements Serializable {
     public double getBalance() {
         return balance;
     }
-
     public void setBalance(double balance) {
         this.balance = balance;
+        SaveToFile(this);
     }
 
     public Product[] getCartProduct() {
         return cartProduct;
     }
-
     public void setCartProduct(Product[] cartProduct) {
         this.cartProduct = cartProduct;
+        SaveToFile(this);
     }
 
     public OrderItem[] getOrderHistory() {
@@ -145,12 +145,12 @@ public class User implements Serializable {
 
     public void setOrderHistory(OrderItem[] orderHistory) {
         this.orderHistory = orderHistory;
+        SaveToFile(this);
     }
 
     public int getPaymentPassword() {
         return paymentPassword;
     }
-
     public void setPaymentPassword(int paymentPassword) {
         this.paymentPassword = paymentPassword;
     }
@@ -160,41 +160,41 @@ public class User implements Serializable {
     public double getProfit() {
         return profit;
     }
-
     public void setProfit(double profit) {
         this.profit = profit;
+        SaveToFile(this);
     }
 
     public Product[] getProductsList() {
         return productsList;
     }
-
     public void setProductsList(Product p) {
-        this.productsList[ProductCount] = p;
+        this.productsList[ProductCount]=p;
+        SaveToFile(this);
     }
 
     public String[] getTransactionHistory() {
         return transactionHistory;
     }
-
     public void setTransactionHistory(String[] transactionHistory) {
         this.transactionHistory = transactionHistory;
+        SaveToFile(this);
     }
 
     public String[] getOrderNotifications() {
         return orderNotifications;
     }
-
     public void setOrderNotifications(String[] orderNotifications) {
         this.orderNotifications = orderNotifications;
+        SaveToFile(this);
     }
 
     public int getProductCount() {
         return ProductCount;
     }
-
     public void setProductCount(int productCount) {
         ProductCount = productCount;
+        SaveToFile(this);
     }
 
     public void register(String username, String email, String password, int paymentPassword) {

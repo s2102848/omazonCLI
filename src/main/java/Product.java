@@ -2,7 +2,9 @@
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.regex.*;
+
 public class Product implements Serializable{
     //----------------------------------\\
     //@Serial
@@ -23,16 +25,12 @@ public class Product implements Serializable{
     //----------------------------------\\
     public Product(String productName, String description, Double price, int stockCount, int salesCount,String category, String ownerName) {
         this.productName = productName;
-
         this.description = description;
         this.price = price;
         this.stockCount = stockCount;
         this.salesCount = salesCount;
         setCategory(category);
-
         this.ownerName = ownerName;
-     //   this.reviews = reviews;
-    //    this.bestSelling = bestSelling;
     }
     //saveToFile
 
@@ -85,7 +83,7 @@ public class Product implements Serializable{
             System.out.println("----------------------------------------------------------------------------------------");
             System.out.println(review);
         }
-        System.out.println("---------------------------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------------------");
 
     }
 
@@ -110,35 +108,40 @@ public class Product implements Serializable{
         }
         return Parr;
     }
+
     @SuppressWarnings("empty-statement")
-    public void SearchForProduct(String productOrSellerName){
+    public Product[] SearchForProduct(String productOrSellerName){
         int i = 0;
         int length = Productfolder.listFiles().length;
-        String[] productNameList = new String[length];
-        String[] sellerNameList = new String[length];
-        String str=productOrSellerName.trim();
+        String c = "(.*)";
+        String str0 =productOrSellerName.trim();
+        String str = str0.toLowerCase();
+
+        Product[] ProductList = new Product[length];
+        Product[] matchedList = new Product[length];
+
         for(File fileEntry : Productfolder.listFiles()){
             Product k = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
-            productNameList[i] = k.getProductName();
-            sellerNameList[i]=k.getOwnerName();
+            ProductList[i] = k;
             i++;
         }
-        for(int l=0; l<productNameList.length-1;l++){
-            if(productNameList[l].equalsIgnoreCase(str)){
-            
-                System.out.println("Product: "+ productName);
-            }else if(sellerNameList[l].equalsIgnoreCase(str))
-                System.out.println("Seller: "+ownerName);
-            else{
-                System.out.println("Product or Seller Not Found");
+        int j = 0;
+        for(int l=0; l<ProductList.length;l++){
+            if(ProductList[l].productName.toLowerCase().matches(c+str+c)){
+                System.out.println((j+1)+". "+ ProductList[l].productName+", RM"+ProductList[l].price+", Seller: "+ProductList[l].ownerName);
+                matchedList[j] = ProductList[l];
+                j++;
+            }else if(ProductList[l].ownerName.toLowerCase().matches(c+str+c)){
+                System.out.println((j+1)+". "+ ProductList[l].productName+", RM"+ProductList[l].price+", Seller: "+ProductList[l].ownerName);
+                matchedList[j] = ProductList[l];
+                j++;
             }
-                
         }
+        if (j == 0){ System.out.println("Seller or Product not found"); return null;}
+        else return matchedList;
 
-            
+
     }
-
-
 
     public Product[] displayCategory(String category, Boolean sortPrice){
         int i = 0;
@@ -183,24 +186,29 @@ public class Product implements Serializable{
         return Parr;
     }
 
-    public void updateProduct(Product p, int quantityBought){
-        int currentStockCount = p.stockCount;
+    public void updateProduct(int quantityBought){
+        int currentStockCount = this.stockCount;
         if (quantityBought>currentStockCount) System.out.println("Warning!: Only "+currentStockCount+" left in Stock");
         else {
-            p.stockCount = currentStockCount - quantityBought;
-            p.salesCount = currentStockCount + quantityBought;
+            this.stockCount = currentStockCount - quantityBought;
+            this.salesCount = currentStockCount + quantityBought;
+            SaveToFile(this);
         }
     }
-    public void updateProduct(Product p, String newReview){
-        String[] temp = new String[newReview.length()+1];
+
+    public void updateProduct(String customerName, String newReview){
+        String[] temp = new String[(this.reviews).length+1];
         int i = 0;
-        for (String r:p.reviews){
+        for (String r:this.reviews){
             temp[i] = r;
             i++;
         }
-        temp[i]= newReview;
+        temp[i]= customerName+":\n\t"+newReview;
+        this.reviews = temp;
+        SaveToFile(this);
     }
-    public void printBestSelling(int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
+
+    public Product[] printBestSelling(int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
@@ -220,6 +228,7 @@ public class Product implements Serializable{
             j++;
             if (j == top_n+1) break;
         }
+        return Parr;
     }
 
 
@@ -228,64 +237,71 @@ public class Product implements Serializable{
     public String getProductName() {
         return productName;
     }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProductName(String prodName) {
+        Product prodWithPreviousName = this;
+        File thisProduct = new File("src/database/PRODUCTS/"+prodWithPreviousName.getProductName());
+        thisProduct.delete();
+        prodWithPreviousName.productName = prodName;
+        SaveToFile(prodWithPreviousName);
     }
 
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
+        SaveToFile(this);
     }
 
     public Double getPrice() {
         return price;
     }
-
     public void setPrice(Double price) {
         this.price = price;
+        SaveToFile(this);
     }
 
     public int getStockCount() {
         return stockCount;
     }
-
     public void setStockCount(int stockCount) {
         this.stockCount = stockCount;
+        SaveToFile(this);
     }
-
     public int getSalesCount() {
         return salesCount;
     }
 
-    public void setSalesCount(int salesCount) {
-        this.salesCount = salesCount;
-    }
-
     public String[] getReviews() {
-        return reviews;
+        System.out.println("* Product Reviews:");
+        for (String review : this.reviews) {
+            if (review == null) continue;
+            System.out.println("----------------------------------------------------------------------------------------");
+            System.out.println(review);
+        }
+        System.out.println("----------------------------------------------------------------------------------------");
+        return this.reviews;
     }
-
-    public void setReviews(String[] reviews) {
-        this.reviews = reviews;
+    public void addComment(int reviewNumber,String sellerName, String newComment) {
+        String temp = this.reviews[reviewNumber]+"\n\t\t Comment from Seller("+sellerName+"):\n\t\t\t"+newComment;
+        this.reviews[reviewNumber] = temp;
+        SaveToFile(this);
     }
 
     public Boolean getBestSelling() {
         return bestSelling;
     }
-
     public void setBestSelling(Boolean bestSelling) {
         this.bestSelling = bestSelling;
+        SaveToFile(this);
     }
+
     public String getOwnerName() {
         return ownerName;
     }
-
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
+        SaveToFile(this);
     }
 
     //Category
@@ -300,6 +316,7 @@ public class Product implements Serializable{
             case "0" : this.category = "Other";
             default : this.category = "Other";
         }
+        SaveToFile(this);
     }
     public String getCategory() {
         return category;
