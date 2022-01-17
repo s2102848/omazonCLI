@@ -14,11 +14,11 @@ public class Main {
         Scanner s = new Scanner(System.in);
         System.out.println(activeUser.getUsername()+" is logged in.");
         mainscreen();
-        //   Product prod = Product.ReadFromFile("testu\\PRODUCTS\\Pencil");
+     //   Product prod = Product.ReadFromFile("testu\\PRODUCTS\\Pencil");
         //todo: fix the shopping cart
-        //   prod.putIntoCart(activeUser);
-        //   prod = Product.ReadFromFile("testu\\PRODUCTS\\dragon");
-        //   prod.putIntoCart(activeUser);
+     //   prod.putIntoCart(activeUser);
+     //   prod = Product.ReadFromFile("testu\\PRODUCTS\\dragon");
+     //   prod.putIntoCart(activeUser);
         while(loggedIn){
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Current user: "+activeUser.getUsername()+"!");
@@ -85,15 +85,15 @@ public class Main {
         for(File fileEntry : folder.listFiles()){
             User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
             if(username.equals(u.getUsername()) && password.equals(u.getPassword())) {
-                loggedIn=true;
-                return u;
+                    loggedIn=true;
+                    return u;
             }else{
                 System.out.println("Wrong username or password!");
                 loggedIn=false;
             }
 
         }
-        return blankUser;
+    return blankUser;
 
     }
     public static void register(){
@@ -196,7 +196,7 @@ public class Main {
                 for(File fileEntry : folder.listFiles()){
                     Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
                     if(p.getOwnerName().equals(activeUser.getUsername()))
-                        System.out.println(p.getProductName());
+                    System.out.println(p.getProductName());
                 }
 
             }
@@ -249,25 +249,25 @@ public class Main {
                             p.setPrice(price);
                             p.setStockCount(stockCount);
                             Product.SaveToFile(p);
-                        }
-
-                    }
-
                 }
-                if(answer.equals("4")){
-                    selling=false;
+
                 }
 
             }
             if(answer.equals("4")){
                 selling=false;
             }
+
+        }
+            if(answer.equals("4")){
+                selling=false;
+            }
             if(answer.equals("0")){
                 System.exit(0);
             }
-        }
-
     }
+
+}
     public static void shoppingCart(){
         while(loggedIn&&checkingShoppingCart){
             Scanner s = new Scanner(System.in);

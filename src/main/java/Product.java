@@ -268,7 +268,7 @@ public class Product implements Serializable{
     public String[] getReviews() {
         return reviews;
     }
-    //the getter and setter for reviews has to be changed later.
+
     public void setReviews(String[] reviews) {
         this.reviews = reviews;
     }
