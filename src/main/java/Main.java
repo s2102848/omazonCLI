@@ -275,6 +275,34 @@ public class Main {
             }
         }
     }
+        public static void checkTransactionsAndProfits(){
+        while(loggedIn&&managingAccount){
+             Scanner keyboard = new Scanner(System.in);
+             String answer;
+             ArrayList<Double> profitList = new ArrayList<Double>();
+             for(int i=0;i<profitList.size();i++){
+                 profitList.add(activeUser.getProfit());
+             }
+             System.out.println("\t\t\t\t**==============================================================**");
+             System.out.println("\t\t\t\t1. Would you like to view the transaction list?");
+             System.out.println("\t\t\t\t2. Woould you like to view profits for the your products?");
+             System.out.println("\t\t\t\t0. Go Back");
+             System.out.println("\t\t\t\t**==============================================================**");
+             answer=keyboard.next();
+             if(answer.equals("1")){
+                 System.out.println("\t\t\t\tThe List of your Transaction: "+ activeUser.getTransactionHistory());
+             }
+             else if(answer.equals("2")){
+                 System.out.println("\t\t\t\t The List of Your Product profits: "+ profitList);
+             }
+             else if(answer.equals(0)){
+                 managingAccount=false;
+             }
+             else{
+                 System.out.println("Please enter a value from the given options");
+             }
+        }
+    }
 
     //todo: Remove product from shopping cart proceed to pay not available
     public static void shoppingCart(){
