@@ -197,14 +197,15 @@ public class User implements Serializable {
         ProductCount = productCount;
     }
 
-    public void register(String username, String email, String password) {
-        String sql = "INSERT INTO Users(username, email, password) VALUES(?,?,?)";
+    public void register(String username, String email, String password, String paymentPassword) {
+        String sql = "INSERT INTO Users(username, email, password, payment_password) VALUES(?,?,?,?)";
 
         try (Connection conn = DB.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, username);
             pstmt.setString(2, email);
             pstmt.setString(3, password);
+            pstmt.setString(4, paymentPassword);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
