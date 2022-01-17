@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.*;
+
 public class Product implements Serializable{
     //----------------------------------\\
     //@Serial
@@ -111,6 +112,7 @@ public class Product implements Serializable{
         }
         return Parr;
     }
+
     @SuppressWarnings("empty-statement")
     public Product[] SearchForProduct(String productOrSellerName){
         int i = 0;
@@ -144,8 +146,6 @@ public class Product implements Serializable{
 
 
     }
-
-
 
     public Product[] displayCategory(String category, Boolean sortPrice){
         int i = 0;
@@ -199,17 +199,19 @@ public class Product implements Serializable{
             SaveToFile(this);
         }
     }
-    public void updateProduct(String newReview){
+
+    public void updateProduct(String customerName, String newReview){
         String[] temp = new String[(this.reviews).length+1];
         int i = 0;
         for (String r:this.reviews){
             temp[i] = r;
             i++;
         }
-        temp[i]= newReview;
+        temp[i]= customerName+":\n\t"+newReview;
         this.reviews = temp;
         SaveToFile(this);
     }
+
     public Product[] printBestSelling(int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
         int i = 0;
         int length = Productfolder.listFiles().length;
@@ -239,7 +241,6 @@ public class Product implements Serializable{
     public String getProductName() {
         return productName;
     }
-
     public void setProductName(String productName) {
         Product prodWithPreviousName = this;
         int length = Productfolder.listFiles().length;
@@ -257,7 +258,6 @@ public class Product implements Serializable{
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
         SaveToFile(this);
@@ -266,7 +266,6 @@ public class Product implements Serializable{
     public Double getPrice() {
         return price;
     }
-
     public void setPrice(Double price) {
         this.price = price;
         SaveToFile(this);
@@ -275,41 +274,41 @@ public class Product implements Serializable{
     public int getStockCount() {
         return stockCount;
     }
-
     public void setStockCount(int stockCount) {
         this.stockCount = stockCount;
         SaveToFile(this);
     }
-
     public int getSalesCount() {
         return salesCount;
     }
 
-/*    public void setSalesCount(int salesCount) {
-        this.salesCount = salesCount;
-        SaveToFile(this);
-    }*/
-
     public String[] getReviews() {
-        return reviews;
+        System.out.println("* Product Reviews:");
+        for (String review : this.reviews) {
+            if (review == null) continue;
+            System.out.println("----------------------------------------------------------------------------------------");
+            System.out.println(review);
+        }
+        System.out.println("----------------------------------------------------------------------------------------");
+        return this.reviews;
     }
-
-/*    public void setReviews(String[] reviews) {
-        this.reviews = reviews;
-    }*/
+    public void addComment(int reviewNumber,String sellerName, String newComment) {
+        String temp = this.reviews[reviewNumber]+"\n\t\t Comment from Seller("+sellerName+"):\n\t\t\t"+newComment;
+        this.reviews[reviewNumber] = temp;
+        SaveToFile(this);
+    }
 
     public Boolean getBestSelling() {
         return bestSelling;
     }
-
     public void setBestSelling(Boolean bestSelling) {
         this.bestSelling = bestSelling;
         SaveToFile(this);
     }
+
     public String getOwnerName() {
         return ownerName;
     }
-
     public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
         SaveToFile(this);
