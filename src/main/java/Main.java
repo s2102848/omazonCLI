@@ -114,8 +114,6 @@ public class Main {
                 register();
             }
         }
-        System.out.println("Please enter your password: ");
-        password = s.next();
         System.out.println("Please enter your email: ");
         email = s.next();
         for(File fileEntry : folder.listFiles()){
@@ -125,6 +123,8 @@ public class Main {
                 register();
             }
         }
+        System.out.println("Please enter your password: ");
+        password = s.next();
 
         User user = new User(username, password, email);
         User.SaveToFile(user);
