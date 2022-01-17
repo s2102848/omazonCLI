@@ -20,7 +20,7 @@ public class User implements Serializable{
     //Seller
     private double profit;
     private Product[] productsList= new Product[100];
-  //  private Product[] productsList;
+    //  private Product[] productsList;
     private String[] transactionHistory;
     private String[] orderNotifications;
 
@@ -53,12 +53,12 @@ public class User implements Serializable{
         this.balance=0;
 
         //this.cartProduct=cartProduct;
-       // this.orderHistory=orderHistory;
-       // this.paymentPassword=paymentPassword;
-     //   this.profit=profit;
-      //  this.productsList=productsList;
-       // this.transactionHistory=transactionHistory;
-       // this.orderNotifications=orderNotifications;
+        // this.orderHistory=orderHistory;
+        // this.paymentPassword=paymentPassword;
+        //   this.profit=profit;
+        //  this.productsList=productsList;
+        // this.transactionHistory=transactionHistory;
+        // this.orderNotifications=orderNotifications;
 
 
     }
