@@ -1,8 +1,6 @@
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.IOException;
 
 public class Main {
     public static boolean loggedIn=false;
@@ -154,6 +152,7 @@ public class Main {
             System.out.println("\t\t\t\t 1. Put up product");
             System.out.println("\t\t\t\t 2. View existing listings");
             System.out.println("\t\t\t\t 3. Edit existing listings");
+            System.out.println("\t\t\t\t 4. Delete existing product");
             System.out.println("\t\t\t\t 4. Go back");
             System.out.println("\t\t\t\t 0. Exit");
             System.out.println("\t\t\t\t**==============================================================**");
@@ -268,6 +267,32 @@ public class Main {
                 }
             }
             if(answer.equals("4")){
+                File folder = new File("Testu\\PRODUCTS");
+                System.out.println("\t\t\t\t =======BELOW LIE YOUR PRODUCTS=========");
+                Scanner scanner = new Scanner(System.in);
+                String ans;
+                int i = 0;
+                for(File fileEntry : folder.listFiles()){
+                    Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
+                    if(p.getOwnerName().equals(activeUser.getUsername()))
+                        System.out.println((i+1)+". "+p.getProductName());
+                    i++;
+                }
+                System.out.println("\t\t\t\t =======WRITE THE FULL NAME OF PRODUCT TO DELETE=========");
+                System.out.println("\t\t\t\t Enter 0 to go back");
+                ans = s.next();
+                System.out.println("Are you sure that you want to delete your Product?");
+                System.out.println("Please enter your password to confirm.");
+                if(activeUser.getPassword().equals(s.next())){
+                    File thisProduct = new File("Testu\\PRODUCTS\\"+ans);
+                    if (thisProduct.delete()) System.out.println("Successfully deleted your product");
+                    else{ System.out.println("Wrong product name! Please try again"); sell();}
+                }else{
+                    System.out.println("Wrong password! Please try again");
+                    sell();
+                }
+            }
+            if (answer.equals("5")){
                 selling=false;
             }
             if(answer.equals("0")){
