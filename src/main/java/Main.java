@@ -299,13 +299,18 @@ public class Main {
             System.out.println("\t\t\t\t 5. Fashion and Accessories (women)");
             System.out.println("\t\t\t\t 6. Home and Living");
             System.out.println("\t\t\t\t 7. Other");
-            System.out.println("\t\t\t\t 0. All");
+            System.out.println("\t\t\t\t 8. All");
+            System.out.println("\t\t\t\t 0. Go back");
             System.out.println(
                     "\t\t\t\t**==============================================================**");
             System.out.println("Choose a category to list:");
             String category = s.next();
 
-            if (!category.equals("0")) {
+            if (category.equals("0")) {
+                buyProduct = false;
+            }
+
+            if (!category.equals("8") && !category.equals("0")) {
                 String categoryName;
                 switch (category) {
                     case "1":
@@ -371,22 +376,6 @@ public class Main {
                 System.out.println("Product is not in list.");
             }
 
-            //select product
-//            for (String string : activeUser.getShoppingCart()) {
-//                if (string == null) {
-//
-//                } else {
-//                    System.out.println(string);
-//                }
-//            }
-
-            System.out.println("\t\t\t\t Press 0 to go back");
-            answer = s.next();
-            if (answer.equals("0")) {
-                buyProduct = false;
-            } else {
-                shoppingCart();
-            }
         }
     }
 
@@ -578,27 +567,26 @@ public class Main {
             //stock not enough validation
             if (quantity > product.getStockCount()) {
                 System.out.println("Stock is not enough. Please reduce or contact customer service.");
-                buyProduct = false;
-            }
-
-            System.out.println("Please enter the delivery address");
-            String address = s.next();
-
-            OrderItem orderItems = new OrderItem(quantity, product);
-            OrderItem[] orders = new OrderItem[]{orderItems};
-
-            Order order = new Order(activeUser.getUsername(), product.getOwnerName(), address, orders);
-            product.alterStockCount(quantity);
-
-            //if balance not enough validator
-            if (!(activeUser.getBalance() < order.getTotalPrice())) {
-                order.saveToFile(order);
-                activeUser.setBalance(order.deductWallet(activeUser.getBalance(), activeUser.getUsername()));
-                System.out.println("Purchased successfully! Thank you.");
             } else {
-                System.out.println("Balance is not enough! Please top up and try again.");
-            }
+                System.out.println("Please enter the delivery address");
+                String address = s.next();
 
+                OrderItem orderItems = new OrderItem(quantity, product);
+                OrderItem[] orders = new OrderItem[]{orderItems};
+
+                Order order = new Order(activeUser.getUsername(), product.getOwnerName(), address, orders);
+                product.alterStockCount(quantity);
+
+                //if balance not enough validator
+                if (!(activeUser.getBalance() < order.getTotalPrice())) {
+                    order.saveToFile(order);
+                    activeUser.setBalance(order.deductWallet(activeUser.getBalance(), activeUser.getUsername()));
+                    System.out.println("Purchased successfully! Thank you, we will notify the seller to hip out your item.");
+                } else {
+                    System.out.println("Balance is not enough! Please top up and try again.");
+                }
+
+            }
             buyProduct = false;
         }
     }
