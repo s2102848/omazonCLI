@@ -1,100 +1,110 @@
+import connect.DB;
 
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class User implements Serializable{
-    //Basic info
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+    // Basic info
     private String Username;
     private String Password;
     private String email;
-    File Productfolder = new File("Testu\\USERNAMES");
+    File Productfolder = new File("src/database/PRODUCTS/");
     //Customer
     private double balance;
     private Product[] cartProduct;
-    private String[] orderHistory;
+    private OrderItem[] orderHistory;
     private int paymentPassword;
-    private int ProductCount=0;
-    //Seller
+    private int ProductCount = 0;
+    // Seller
     private double profit;
-    private Product[] productsList= new Product[100];
-    //  private Product[] productsList;
+    private Product[] productsList = new Product[100];
+    // private Product[] productsList;
     private String[] transactionHistory;
     private String[] orderNotifications;
-
-    private static final long serialVersionUID = 1L;
     private String[] shoppingCart = new String[100];
-    private int productsInCart=0;
 
-    public int getProductsInCart(){
-        return productsInCart;
-    }
-    public void incrementProductsInCart(){
-        this.productsInCart++;
+    private int productsInCart = 0;
+
+    public User() {
     }
 
-    public void setShoppingCart(String[] shoppingCart){
-        this.shoppingCart = shoppingCart;
-    }
-    public String[] getShoppingCart(){
+    public User(String Username, String Password, String email) {
+        this.Username = Username;
+        this.Password = Password;
+        this.email = email;
+        this.balance = 0;
 
-        return this.shoppingCart;
-    }
-
-
-    public User(String Username,String Password,String email) {
-        this.Username=Username;
-        this.Password=Password;
-        this.email=email;
-        this.balance=0;
-
-        //this.cartProduct=cartProduct;
+        // this.cartProduct=cartProduct;
         // this.orderHistory=orderHistory;
         // this.paymentPassword=paymentPassword;
-        //   this.profit=profit;
-        //  this.productsList=productsList;
+        // this.profit=profit;
+        // this.productsList=productsList;
         // this.transactionHistory=transactionHistory;
         // this.orderNotifications=orderNotifications;
     }
-    public static void SaveToFile(User u){   //add filepath as a parameter
-        try{
-            FileOutputStream fileOut = new FileOutputStream("Testu\\USERNAMES\\"+u.Username);
+
+    public static void initializeShoppingCart(String[] shoppingCart) {
+        for (int i = 0; i < shoppingCart.length; i++) {
+            shoppingCart[i] = "";
+        }
+    }
+
+    public static void SaveToFile(User u) { // add filepath as a parameter
+        try {
+            FileOutputStream fileOut = new FileOutputStream("src/database/USERNAMES/" + u.Username);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(u);
             objectOut.close();
             System.out.println("Successfully written.");
 
-
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static User ReadFromFile(String filepath){
+    public static User ReadFromFile(String filepath) {
         try {
             FileInputStream fileIn = new FileInputStream(filepath);
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
             User u = (User) objectIn.readObject();
-            //System.out.println("User successfully read from file.");
+            // System.out.println("User successfully read from file.");
             objectIn.close();
             return u;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    public int getProductsInCart() {
+        return productsInCart;
+    }
 
+    public void incrementProductsInCart() {
+        this.productsInCart++;
+    }
+
+    public String[] getShoppingCart() {
+
+        return this.shoppingCart;
+    }
+
+    public void setShoppingCart(String[] shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
 
     // Basic info
 
     public String getUsername() {
         return Username;
     }
+
     public void setUsername(String newUsername) {
-        User userWithPreviousName = this;
-        File thisUser = new File("Testu\\USERNAMES\\"+userWithPreviousName.getUsername());
-        thisUser.delete();
-        userWithPreviousName.Username = newUsername;
-        SaveToFile(userWithPreviousName);
+        this.Username = newUsername;
     }
 
     public String getPassword() {
@@ -102,7 +112,6 @@ public class User implements Serializable{
     }
     public void setPassword(String Password) {
         this.Password = Password;
-        SaveToFile(this);
     }
 
     public String getEmail() {
@@ -110,10 +119,9 @@ public class User implements Serializable{
     }
     public void setEmail(String email) {
         this.email = email;
-        SaveToFile(this);
     }
 
-    //Customer
+    // Customer
 
     public double getBalance() {
         return balance;
@@ -131,10 +139,11 @@ public class User implements Serializable{
         SaveToFile(this);
     }
 
-    public String[] getOrderHistory() {
+    public OrderItem[] getOrderHistory() {
         return orderHistory;
     }
-    public void setOrderHistory(String[] orderHistory) {
+
+    public void setOrderHistory(OrderItem[] orderHistory) {
         this.orderHistory = orderHistory;
         SaveToFile(this);
     }
@@ -144,10 +153,9 @@ public class User implements Serializable{
     }
     public void setPaymentPassword(int paymentPassword) {
         this.paymentPassword = paymentPassword;
-        SaveToFile(this);
     }
 
-    //Seller
+    // Seller
 
     public double getProfit() {
         return profit;
@@ -187,5 +195,176 @@ public class User implements Serializable{
     public void setProductCount(int productCount) {
         ProductCount = productCount;
         SaveToFile(this);
+    }
+
+    public void register(String username, String email, String password, int paymentPassword) {
+        String sql = "INSERT INTO Users(username, email, password, payment_password) VALUES(?,?,?,?)";
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, email);
+            pstmt.setString(3, password);
+            pstmt.setInt(4, paymentPassword);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public User login(String username, String password) {
+        String sql = "SELECT * FROM Users WHERE username = ? AND password = ?";
+        ResultSet rs = null;
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                this.Username = rs.getString("username");
+                this.email = rs.getString("email");
+                this.Password = rs.getString("password");
+                this.paymentPassword = rs.getInt("payment_password");
+                this.balance = rs.getDouble("credit_balance");
+                return this;
+            } else {
+                System.out.println("Wrong username or password! Please try again.\n");
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+    }
+
+    // check username
+    public boolean checkUsername(String username) {
+        String sql = "SELECT username FROM Users WHERE username = ?";
+        boolean checkUser = false;
+        ResultSet rs = null;
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            rs = pstmt.executeQuery();
+
+            if (rs.next())
+                checkUser = true;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return checkUser;
+    }
+
+    public boolean checkEmail(String email) {
+        String sql = "SELECT email FROM Users WHERE email = ?";
+        boolean checkUser = false;
+        ResultSet rs = null;
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            rs = pstmt.executeQuery();
+
+            if (rs.next())
+                checkUser = true;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return checkUser;
+    }
+
+    public void topUpBalance(double balance) {
+        this.balance += balance;
+
+        String sql = "UPDATE Users SET credit_balance = ? WHERE username = ?";
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setDouble(1, this.balance);
+            pstmt.setString(2, this.getUsername());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateAccount(String username, String email, String password) {
+
+    }
+
+    public void updateUsername(String username) {
+        String sql = "UPDATE Users SET username = ? WHERE username = ?";
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, this.getUsername());
+            this.setUsername(username);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updatePassword(String password) {
+        String sql = "UPDATE Users SET password = ? WHERE username = ?";
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, password);
+            pstmt.setString(2, this.getUsername());
+            this.setPassword(password);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updatePaymentPassword(int password) {
+        String sql = "UPDATE Users SET payment_password = ? WHERE username = ?";
+
+        try (Connection conn = DB.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, password);
+            pstmt.setString(2, this.getUsername());
+            this.setPaymentPassword(password);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void updateEmail(String email) {
+        String sql = "UPDATE Users SET email = ? WHERE username = ?";
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+            pstmt.setString(2, this.getUsername());
+            this.setPassword(email);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void delete() {
+        String sql = "DELETE FROM Users WHERE username = ?";
+
+        try (Connection conn = DB.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, this.getUsername());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

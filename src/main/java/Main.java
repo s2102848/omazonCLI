@@ -1,6 +1,8 @@
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.IOException;
 
 public class Main {
     public static boolean loggedIn=false;
@@ -152,7 +154,6 @@ public class Main {
             System.out.println("\t\t\t\t 1. Put up product");
             System.out.println("\t\t\t\t 2. View existing listings");
             System.out.println("\t\t\t\t 3. Edit existing listings");
-            System.out.println("\t\t\t\t 4. Delete existing product");
             System.out.println("\t\t\t\t 4. Go back");
             System.out.println("\t\t\t\t 0. Exit");
             System.out.println("\t\t\t\t**==============================================================**");

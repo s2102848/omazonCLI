@@ -21,7 +21,7 @@ public class Product implements Serializable{
 
     private String ownerName;
 
-    File Productfolder = new File("Testu\\PRODUCTS");
+    File Productfolder = new File("src/database/PRODUCTS");
     //----------------------------------\\
     public Product(String productName, String description, Double price, int stockCount, int salesCount,String category, String ownerName) {
         this.productName = productName;
@@ -36,7 +36,7 @@ public class Product implements Serializable{
 
     public static void SaveToFile(Product product){   //add filepath as a parameter
         try{
-            FileOutputStream fileOut = new FileOutputStream("Testu\\PRODUCTS\\"+product.productName);
+            FileOutputStream fileOut = new FileOutputStream("src/database/PRODUCTS/"+product.productName);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(product);
             objectOut.close();
@@ -239,7 +239,7 @@ public class Product implements Serializable{
     }
     public void setProductName(String prodName) {
         Product prodWithPreviousName = this;
-        File thisProduct = new File("Testu\\USERNAMES\\"+prodWithPreviousName.getProductName());
+        File thisProduct = new File("src/database/PRODUCTS/"+prodWithPreviousName.getProductName());
         thisProduct.delete();
         prodWithPreviousName.productName = prodName;
         SaveToFile(prodWithPreviousName);
@@ -322,4 +322,10 @@ public class Product implements Serializable{
         return category;
     }
     //----------------------------------\\
+
+    public void alterStockCount(int quantity) {
+        stockCount-=quantity;
+        salesCount++;
+        SaveToFile(this);
+    }
 }
