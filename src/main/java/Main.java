@@ -107,7 +107,7 @@ public class Main {
         String username;
         String password;
         String email;
-        String paymentPassword;
+        int paymentPassword;
 
         System.out.println("Please enter your username: ");
         username = s.next();
@@ -133,7 +133,7 @@ public class Main {
         }
 
         System.out.println("Please enter your payment password: ");
-        paymentPassword = s.next();
+        paymentPassword = s.nextInt();
 
         user.register(username, email, password, paymentPassword);
 
@@ -473,6 +473,17 @@ public class Main {
                 if (answer.equals("0")) {
                     manageAccount();
                 }
+            } else if (answer.equals("2")) {
+                System.out.println("\t\t\t\t Please enter your password to confirm.");
+                if (activeUser.getPassword().equals(s.next())) {
+                    System.out.println("\t\t\t\t Enter your new payment password");
+                    int newPassword = s.nextInt();
+                    activeUser.updatePaymentPassword(newPassword);
+                    System.out.println("\t\t\t\t Payment password changed successfully!");
+                } else {
+                    System.out.println("\t\t\t\t Wrong password! Please try again");
+                    manageAccount();
+                }
             }
             if (answer.equals("3")) {
                 System.out.println("\t\t\t\t Are you sure that you want to delete your account?");
@@ -543,6 +554,7 @@ public class Main {
     }
 
     public static void productDetail(Product product) {
+        Scanner s = new Scanner(System.in);
         System.out.println("\t\t\t\t**==============================================================**");
         System.out.println("\t\t\t\tProduct Detail");
         System.out.println("\t\t\t\t**==============================================================**");
@@ -557,5 +569,37 @@ public class Main {
         System.out.println("2. Add to cart");
         System.out.println("3. Add to favorite");
         System.out.println("4. Back to home");
+        String option = s.next();
+
+        if (option.equals("1")) {
+            System.out.println("Please enter quantity of item to purchase");
+            int quantity = s.nextInt();
+
+            //stock not enough validation
+            if (quantity > product.getStockCount()) {
+                System.out.println("Stock is not enough. Please reduce or contact customer service.");
+                buyProduct = false;
+            }
+
+            System.out.println("Please enter the delivery address");
+            String address = s.next();
+
+            OrderItem orderItems = new OrderItem(quantity, product);
+            OrderItem[] orders = new OrderItem[]{orderItems};
+
+            Order order = new Order(activeUser.getUsername(), product.getOwnerName(), address, orders);
+            product.alterStockCount(quantity);
+
+            //if balance not enough validator
+            if (!(activeUser.getBalance() < order.getTotalPrice())) {
+                order.saveToFile(order);
+                activeUser.setBalance(order.deductWallet(activeUser.getBalance(), activeUser.getUsername()));
+                System.out.println("Purchased successfully! Thank you.");
+            } else {
+                System.out.println("Balance is not enough! Please top up and try again.");
+            }
+
+            buyProduct = false;
+        }
     }
 }
