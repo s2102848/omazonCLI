@@ -106,7 +106,11 @@ public class User implements Serializable {
     }
 
     public void setUsername(String newUsername) {
-        this.Username = newUsername;
+        User userWithPreviousName = this;
+        File thisProduct = new File("src\\database\\USERNAMES\\"+userWithPreviousName.getUsername());
+        thisProduct.delete();
+        userWithPreviousName.Username = newUsername;
+        SaveToFile(userWithPreviousName);
     }
 
     public String getPassword() {
@@ -114,6 +118,7 @@ public class User implements Serializable {
     }
     public void setPassword(String Password) {
         this.Password = Password;
+        SaveToFile(this);
     }
 
     public String getEmail() {
@@ -121,6 +126,7 @@ public class User implements Serializable {
     }
     public void setEmail(String email) {
         this.email = email;
+        SaveToFile(this);
     }
 
     // Customer
@@ -155,6 +161,7 @@ public class User implements Serializable {
     }
     public void setPaymentPassword(int paymentPassword) {
         this.paymentPassword = paymentPassword;
+        SaveToFile(this);
     }
 
     // Seller
