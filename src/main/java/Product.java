@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.*;
 
-public class Product implements Serializable{
+public class Product<Productfolder> implements Serializable{
     //----------------------------------\\
     //@Serial
     private static final long serialVersionUID = 1L;
@@ -21,7 +21,7 @@ public class Product implements Serializable{
 
     private String ownerName;
 
-    File Productfolder = new File("src/database/PRODUCTS");
+    private static File Productfolder = new File("src/database/PRODUCTS");
     //----------------------------------\\
     public Product(String productName, String description, Double price, int stockCount, int salesCount,String category, String ownerName) {
         this.productName = productName;
@@ -110,7 +110,7 @@ public class Product implements Serializable{
     }
 
     @SuppressWarnings("empty-statement")
-    public Product[] SearchForProduct(String productOrSellerName){
+    public static Product[] SearchForProduct(String productOrSellerName){
         int i = 0;
         int length = Productfolder.listFiles().length;
         String c = "(.*)";
@@ -143,7 +143,7 @@ public class Product implements Serializable{
 
     }
 
-    public Product[] displayCategory(String category, Boolean sortPrice){
+    public static  Product[] displayCategory(String category, Boolean sortPrice){
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
@@ -208,7 +208,7 @@ public class Product implements Serializable{
         SaveToFile(this);
     }
 
-    public Product[] printBestSelling(int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
+    public static Product[] printBestSelling(int top_n){//top_n means top 3, top 4 or top 5 etc best selling products to be displayed
         int i = 0;
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];

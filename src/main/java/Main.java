@@ -9,6 +9,7 @@ public class Main {
     public static boolean selling=false;
     public static boolean checkingShoppingCart=false;
     public static boolean managingAccount = false;
+    public static boolean shopping = false;
     public static User activeUser = greetingscreen();
 
     public static void main(String[] args) {
@@ -54,6 +55,114 @@ public class Main {
 
         }
 
+    }
+
+    public static void homepage(){
+        while (loggedIn&&shopping) {
+            Scanner s = new Scanner(System.in);
+            Product[] bestSellingProdArray = Product.printBestSelling(3);
+            System.out.println("\t\t\t\t**==============================================================**");
+            System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
+            System.out.println("\t\t\t\t A. Search");
+            System.out.println("\t\t\t\t B. Check Balance");
+            System.out.println("\t\t\t\t C. Go to cart");
+            System.out.println("\t\t\t\t D. Go to category");
+            System.out.println("\t\t\t\t E. Go back");
+            System.out.println("\t\t\t\t F. EXIT");
+            System.out.println("\t\t\t\t**==============================================================**");
+            System.out.print("What to do next (1-3) (A-F): ");
+            String answer = s.next();
+            if (answer.equals("1") || answer.equals("2") || answer.equals("3")) {
+                int choice = Integer.parseInt(answer);
+                bestSellingProdArray[choice - 1].productDisplay();
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
+                System.out.println("\t\t\t\t 1. Add to favorites");
+                System.out.println("\t\t\t\t 2. Add to cart");
+                System.out.println("\t\t\t\t 3. Buy now");
+                System.out.println("\t\t\t\t 0. Go back");
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.print("What to do next (1-3): ");
+                int ans = s.nextInt();
+                if (ans == 1){
+                    //todo: add to  favorites
+                }else if (ans == 2){
+                    //todo: add to  cart
+                }else if (ans == 3){
+                    //todo: add to  cart and then to go shopping cart
+                    shoppingCart();
+                }else homepage();
+            } else if (answer.equals("A")) {
+                System.out.print("Please enter the product name or seller name: ");
+                String ans = s.next();
+                Product[] searchedProdArray = Product.SearchForProduct(ans);
+                System.out.print("What to do next (1, 2, 3, ..) (0 to go back): ");
+                int ans0 = s.nextInt();
+                if (ans0 == 0) homepage();
+                searchedProdArray[ans0 - 1].productDisplay();
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
+                System.out.println("\t\t\t\t 1. Add to favorites");
+                System.out.println("\t\t\t\t 2. Add to cart");
+                System.out.println("\t\t\t\t 3. Buy now");
+                System.out.println("\t\t\t\t 0. Go back");
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.print("What to do next (1-3): ");
+                int ans1 = s.nextInt();
+                if (ans1 == 1){
+                    //todo: add to  favorites
+                }else if (ans1 == 2){
+                    //todo: add to  cart
+                }else if (ans1 == 3){
+                    //todo: add to  cart and then to go shopping cart
+                    shoppingCart();
+                }else homepage();
+            } else if (answer.equals("B")) {
+                System.out.println("Your current balance is: " + activeUser.getBalance());
+                //todo: give option to change balance
+            } else if (answer.equals("C")) {
+                shoppingCart();
+            } else if (answer.equals("D")) {
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.println("\t\t\t\tCategories:");
+                System.out.println("\t\t\t\t 1. Sports and Outdoor");
+                System.out.println("\t\t\t\t 2. Games and Hobbies");
+                System.out.println("\t\t\t\t 3. Machines and Gadgets");
+                System.out.println("\t\t\t\t 4. Fashion and Accessories (men)");
+                System.out.println("\t\t\t\t 5. Fashion and Accessories (women)");
+                System.out.println("\t\t\t\t 6. Home and Living");
+                System.out.println("\t\t\t\t 0. Other");
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.print("Choose a category for your products (write the name):");
+                String category = s.next();
+                Product[] categoryArray = Product.displayCategory(category, true);
+                System.out.print("What to do next (1, 2, 3, ..) (0 to go back): ");
+                int ans0 = s.nextInt();
+                if (ans0 == 0) homepage();
+                categoryArray[ans0 - 1].productDisplay();
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
+                System.out.println("\t\t\t\t 1. Add to favorites");
+                System.out.println("\t\t\t\t 2. Add to cart");
+                System.out.println("\t\t\t\t 3. Buy now");
+                System.out.println("\t\t\t\t 0. Go back");
+                System.out.println("\t\t\t\t**==============================================================**");
+                System.out.print("What to do next (1-3): ");
+                int ans = s.nextInt();
+                if (ans == 1){
+                    //todo: add to  favorites
+                }else if (ans == 2){
+                    //todo: add to  cart
+                }else if (ans == 3){
+                    //todo: add to  cart and then to go shopping cart
+                    shoppingCart();
+                }else homepage();
+            } else if (answer.equals("E")){
+                shopping = false;
+            }else{
+                System.exit(0);
+            }
+        }
     }
 
     public static User greetingscreen(){
@@ -145,7 +254,6 @@ public class Main {
         System.out.println("\t\t\t\t**==============================================================**");
     }
 
-    //todo:Remove product option is not available
     public static void sell(){
         while(loggedIn&&selling) {
             Scanner s = new Scanner(System.in);
@@ -154,7 +262,8 @@ public class Main {
             System.out.println("\t\t\t\t 1. Put up product");
             System.out.println("\t\t\t\t 2. View existing listings");
             System.out.println("\t\t\t\t 3. Edit existing listings");
-            System.out.println("\t\t\t\t 4. Go back");
+            System.out.println("\t\t\t\t 4. Delete existing product");
+            System.out.println("\t\t\t\t 5. Go back");
             System.out.println("\t\t\t\t 0. Exit");
             System.out.println("\t\t\t\t**==============================================================**");
             String answer = s.next();
@@ -188,7 +297,7 @@ public class Main {
                 System.out.println("\t\t\t\t 6. Home and Living");
                 System.out.println("\t\t\t\t 0. Other");
                 System.out.println("\t\t\t\t**==============================================================**");
-                System.out.print("Choose a category for your products:");
+                System.out.print("Choose a category for your products (1-6):");
                 category=s.next();
                 //-------------------------------//
                 Product createdProduct = new Product(productName,description,price,stockCount,salescount,category,activeUser.getUsername());
@@ -279,18 +388,28 @@ public class Main {
                         System.out.println((i+1)+". "+p.getProductName());
                     i++;
                 }
-                System.out.println("\t\t\t\t =======WRITE THE FULL NAME OF PRODUCT TO DELETE=========");
+                System.out.println("\t\t\t\t =======WRITE THE FULL NAME OF PRODUCT TO EDIT=========");
                 System.out.println("\t\t\t\t Enter 0 to go back");
                 ans = s.next();
-                System.out.println("Are you sure that you want to delete your Product?");
-                System.out.println("Please enter your password to confirm.");
-                if(activeUser.getPassword().equals(s.next())){
-                    File thisProduct = new File("Testu\\PRODUCTS\\"+ans);
-                    if (thisProduct.delete()) System.out.println("Successfully deleted your product");
-                    else{ System.out.println("Wrong product name! Please try again"); sell();}
-                }else{
-                    System.out.println("Wrong password! Please try again");
+                if(ans.equals("0")){
                     sell();
+                }else{
+                    System.out.println("Are you sure that you want to delete your account?");
+                    System.out.println("Please enter your password to confirm.");
+                    if(activeUser.getPassword().equals(s.next())){
+                        File thisUser = new File("Testu\\PRODUCTS\\"+ans);
+                        if (thisUser.delete()){
+                            System.out.println("Successfully deleted your product");
+                            sell();
+                        }
+                        else{
+                            System.out.println("The name entered is incorrect retry");
+                            sell();
+                        }
+                    }else{
+                        System.out.println("Wrong password! Please try again");
+                        sell();
+                    }
                 }
             }
             if (answer.equals("5")){
