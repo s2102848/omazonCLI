@@ -1,2 +1,0 @@
-# omazonCLI
-my branch
