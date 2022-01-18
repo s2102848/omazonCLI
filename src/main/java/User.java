@@ -37,7 +37,7 @@ public class User implements Serializable {
         this.Password = Password;
         this.email = email;
         this.balance = 0;
-
+        SaveToFile(this);
         // this.cartProduct=cartProduct;
         // this.orderHistory=orderHistory;
         // this.paymentPassword=paymentPassword;
@@ -59,6 +59,7 @@ public class User implements Serializable {
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(u);
             objectOut.close();
+            fileOut.close();
             System.out.println("Successfully written.");
 
         } catch (Exception e) {
@@ -73,6 +74,7 @@ public class User implements Serializable {
             User u = (User) objectIn.readObject();
             // System.out.println("User successfully read from file.");
             objectIn.close();
+            fileIn.close();
             return u;
         } catch (Exception e) {
             e.printStackTrace();

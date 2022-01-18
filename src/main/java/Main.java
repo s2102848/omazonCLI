@@ -12,6 +12,8 @@ public class Main {
     public static boolean shopping = false;
     public static User activeUser = greetingscreen();
 
+    public static File folder = new File("src\\database\\USERNAMES");
+
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
         System.out.println(activeUser.getUsername()+" is logged in.");
@@ -26,10 +28,7 @@ public class Main {
             System.out.println("\t\t\t\t Current user: "+activeUser.getUsername()+"!");
             System.out.println("\t\t\t\t 1. Sell product");
             System.out.println("\t\t\t\t 2. Buy product (Go to Homepage)");
-            System.out.println("\t\t\t\t 3. List products");
-            System.out.println("\t\t\t\t 4. Check balance");
-            System.out.println("\t\t\t\t 5. Check shopping cart");
-            System.out.println("\t\t\t\t 7. Manage the account");
+            System.out.println("\t\t\t\t 3. Manage the account");
             System.out.println("\t\t\t\t 0. EXIT");
             System.out.println("\t\t\t\t**==============================================================**");
             String answer = s.next();
@@ -38,17 +37,11 @@ public class Main {
                 sell();
             }
             if (answer.equals("2")){
-
-            }
-            if(answer.equals("0")){
+                shopping = true;
+                homepage();
+            }else if(answer.equals("0")){
                 loggedIn=false;
-            }
-            if(answer.equals("5")){
-                checkingShoppingCart=true;
-                shoppingCart();
-
-            }
-            if(answer.equals("7")){
+            }else if(answer.equals("3")){
                 managingAccount=true;
                 manageaccount();
             }
@@ -58,8 +51,8 @@ public class Main {
     }
 
     public static void homepage(){
+        Scanner s = new Scanner(System.in);
         while (loggedIn&&shopping) {
-            Scanner s = new Scanner(System.in);
             Product[] bestSellingProdArray = Product.printBestSelling(3);
             System.out.println("\t\t\t\t**==============================================================**");
             System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
@@ -74,55 +67,26 @@ public class Main {
             String answer = s.next();
             if (answer.equals("1") || answer.equals("2") || answer.equals("3")) {
                 int choice = Integer.parseInt(answer);
-                bestSellingProdArray[choice - 1].productDisplay();
-                System.out.println("\t\t\t\t**==============================================================**");
-                System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
-                System.out.println("\t\t\t\t 1. Add to favorites");
-                System.out.println("\t\t\t\t 2. Add to cart");
-                System.out.println("\t\t\t\t 3. Buy now");
-                System.out.println("\t\t\t\t 0. Go back");
-                System.out.println("\t\t\t\t**==============================================================**");
-                System.out.print("What to do next (1-3): ");
-                int ans = s.nextInt();
-                if (ans == 1){
-                    //todo: add to  favorites
-                }else if (ans == 2){
-                    //todo: add to  cart
-                }else if (ans == 3){
-                    //todo: add to  cart and then to go shopping cart
-                    shoppingCart();
-                }else homepage();
-            } else if (answer.equals("A")) {
+                productpage(bestSellingProdArray[choice - 1]);
+            }
+            else if (answer.equals("A")) {
                 System.out.print("Please enter the product name or seller name: ");
                 String ans = s.next();
                 Product[] searchedProdArray = Product.SearchForProduct(ans);
                 System.out.print("What to do next (1, 2, 3, ..) (0 to go back): ");
                 int ans0 = s.nextInt();
                 if (ans0 == 0) homepage();
-                searchedProdArray[ans0 - 1].productDisplay();
-                System.out.println("\t\t\t\t**==============================================================**");
-                System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
-                System.out.println("\t\t\t\t 1. Add to favorites");
-                System.out.println("\t\t\t\t 2. Add to cart");
-                System.out.println("\t\t\t\t 3. Buy now");
-                System.out.println("\t\t\t\t 0. Go back");
-                System.out.println("\t\t\t\t**==============================================================**");
-                System.out.print("What to do next (1-3): ");
-                int ans1 = s.nextInt();
-                if (ans1 == 1){
-                    //todo: add to  favorites
-                }else if (ans1 == 2){
-                    //todo: add to  cart
-                }else if (ans1 == 3){
-                    //todo: add to  cart and then to go shopping cart
-                    shoppingCart();
-                }else homepage();
-            } else if (answer.equals("B")) {
+                productpage(searchedProdArray[ans0 - 1]);
+            }
+            else if (answer.equals("B")) {
                 System.out.println("Your current balance is: " + activeUser.getBalance());
                 //todo: give option to change balance
-            } else if (answer.equals("C")) {
+            }
+            else if (answer.equals("C")) {
+                checkingShoppingCart=true;
                 shoppingCart();
-            } else if (answer.equals("D")) {
+            }
+            else if (answer.equals("D")) {
                 System.out.println("\t\t\t\t**==============================================================**");
                 System.out.println("\t\t\t\tCategories:");
                 System.out.println("\t\t\t\t 1. Sports and Outdoor");
@@ -136,33 +100,39 @@ public class Main {
                 System.out.print("Choose a category for your products (write the name):");
                 String category = s.next();
                 Product[] categoryArray = Product.displayCategory(category, true);
-                System.out.print("What to do next (1, 2, 3, ..) (0 to go back): ");
+                System.out.print("Choose a product (1, 2, 3, ..) (0 to go back): ");
                 int ans0 = s.nextInt();
                 if (ans0 == 0) homepage();
-                categoryArray[ans0 - 1].productDisplay();
-                System.out.println("\t\t\t\t**==============================================================**");
-                System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
-                System.out.println("\t\t\t\t 1. Add to favorites");
-                System.out.println("\t\t\t\t 2. Add to cart");
-                System.out.println("\t\t\t\t 3. Buy now");
-                System.out.println("\t\t\t\t 0. Go back");
-                System.out.println("\t\t\t\t**==============================================================**");
-                System.out.print("What to do next (1-3): ");
-                int ans = s.nextInt();
-                if (ans == 1){
-                    //todo: add to  favorites
-                }else if (ans == 2){
-                    //todo: add to  cart
-                }else if (ans == 3){
-                    //todo: add to  cart and then to go shopping cart
-                    shoppingCart();
-                }else homepage();
-            } else if (answer.equals("E")){
+                productpage(categoryArray[ans0 - 1]);
+            }
+            else if (answer.equals("E")){
                 shopping = false;
             }else{
                 System.exit(0);
             }
         }
+    }
+    public static void productpage(Product p){
+        Scanner s = new Scanner(System.in);
+        p.productDisplay();
+        System.out.println("\t\t\t\t**==============================================================**");
+        System.out.println("\t\t\t\t Current user: " + activeUser.getUsername() + "!");
+        System.out.println("\t\t\t\t 1. Add to favorites");
+        System.out.println("\t\t\t\t 2. Add to cart");
+        System.out.println("\t\t\t\t 3. Buy now");
+        System.out.println("\t\t\t\t 0. Go back");
+        System.out.println("\t\t\t\t**==============================================================**");
+        System.out.print("What to do next (1-3): ");
+        int ans = s.nextInt();
+        if (ans == 1){
+            //todo: add to  favorites
+        }else if (ans == 2){
+            //todo: add to  cart
+        }else if (ans == 3){
+            //todo: add to  cart and then to go shopping cart
+            checkingShoppingCart=true;
+            shoppingCart();
+        }else homepage();
     }
 
     public static User greetingscreen(){
@@ -174,9 +144,10 @@ public class Main {
         System.out.println("\t\t\t\t 2. Register");
         System.out.println("\t\t\t\t Press any other key to quit.");
         System.out.println("\t\t\t\t============================================");
-        if(s.next().equals("1")){
+        int ans = s.nextInt();
+        if(ans == 1){
             return login();
-        } else if(s.next().equals("2")){
+        } else if(ans == 2){
             register();
         }else{
             System.exit(0);
@@ -188,27 +159,31 @@ public class Main {
         String password;
         Scanner s = new Scanner(System.in);
         User blankUser = new User("Blank","blank", "blankk");
-        System.out.println("\t\t\t\t**==============================================================**");
-        System.out.println("\t\t\t\t Welcome user! Please enter your username and then password");
-        System.out.println("\t\t\t\t**==============================================================**");
+        System.out.println("\t\t\t\t**==================================================================**");
+        System.out.println("\t\t\t\t Welcome user! To Log in Please enter your username and then password");
+        System.out.println("\t\t\t\t**==================================================================**");
         System.out.println("Please enter your username: ");
         username = s.next();
         System.out.println("Please enter your password: ");
         password = s.next();
-        File folder = new File("Testu\\USERNAMES");
+        File folder = new File("src\\database\\USERNAMES");
+        int i = 0;
         for(File fileEntry : folder.listFiles()){
             User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
             if(username.equals(u.getUsername()) && password.equals(u.getPassword())) {
-                    loggedIn=true;
-                    return u;
-            }else{
-                System.out.println("Wrong username or password!");
-                System.out.println("Please Retry");
-                loggedIn=false;
-                greetingscreen();
+                loggedIn=true;
+                i++;
+                return u;
             }
 
         }
+        if (i == 0) {
+            System.out.println("Wrong username or password!");
+            System.out.println("Please Retry");
+            loggedIn = false;
+            greetingscreen();
+        }
+
     return blankUser;
 
     }
@@ -220,9 +195,9 @@ public class Main {
         String username;
         String password;
         String email;
-        File folder = new File("Testu\\USERNAMES");
         System.out.println("Please enter your username: ");
         username = s.next();
+        File folder = new File("src\\database\\USERNAMES");
         for(File fileEntry : folder.listFiles()){
             User u = (User) User.ReadFromFile(fileEntry.getAbsolutePath());
             if(username.equals(u.getUsername())){
@@ -421,7 +396,7 @@ public class Main {
         }
     }
 
-    //todo: Remove product from shopping cart proceed to pay not available
+    //todo: (Remove product from shopping cart) and (proceed to pay) not available
     public static void shoppingCart(){
         while(loggedIn&&checkingShoppingCart){
             Scanner s = new Scanner(System.in);

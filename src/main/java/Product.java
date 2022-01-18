@@ -15,7 +15,7 @@ public class Product<Productfolder> implements Serializable{
     private Double price;
     private int stockCount;
     private int salesCount;
-    private String[] reviews;
+    private String[] reviews = {""};
     private Boolean bestSelling;
     private String category;
 
@@ -40,6 +40,7 @@ public class Product<Productfolder> implements Serializable{
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(product);
             objectOut.close();
+            fileOut.close();
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -51,6 +52,7 @@ public class Product<Productfolder> implements Serializable{
             ObjectInputStream objectIn = new ObjectInputStream(fileIn);
             Product obj = (Product) objectIn.readObject();
             objectIn.close();
+            fileIn.close();
             return obj;
         }catch(Exception e){
             e.printStackTrace();
@@ -79,9 +81,12 @@ public class Product<Productfolder> implements Serializable{
 //        System.out.println("* Product ratings: * * * * ("+this.salesCount+")");
         System.out.println("* Description:\n"+this.description);
         System.out.println("* Product Reviews:");
-        for (String review : this.reviews) {
-            System.out.println("----------------------------------------------------------------------------------------");
-            System.out.println(review);
+        for (int i =0; i<this.reviews.length;i++) {
+            if (this.reviews[i] == null) continue;
+            else {
+                System.out.println("----------------------------------------------------------------------------------------");
+                System.out.println(this.reviews[i]);
+            }
         }
         System.out.println("----------------------------------------------------------------------------------------");
 
