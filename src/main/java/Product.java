@@ -153,7 +153,7 @@ public class Product<Productfolder> implements Serializable{
         int length = Productfolder.listFiles().length;
         Product[] Parr = new Product[length];
         for(File fileEntry : Productfolder.listFiles()){
-            Product p = (Product) Product.ReadFromFile(fileEntry.getAbsolutePath());
+            Product p = Product.ReadFromFile(fileEntry.getAbsolutePath());
             if (p.category.equalsIgnoreCase(category)){
                 Parr[i] = p;
                 i++;
@@ -161,10 +161,14 @@ public class Product<Productfolder> implements Serializable{
         }
         //sorts according to price
         if (sortPrice){Arrays.sort(Parr, (a,b) -> (int)(a.price - b.price));}
+
         int j = 1;
         for (Product p:Parr){
-            System.out.println(j+". "+p.productName+ ", RM "+p.price);
-            j++;
+            if(p!=null){
+                System.out.println(j+". "+p.productName+ ", RM "+p.price);
+                j++;
+            }
+
         }
         return Parr;
     }

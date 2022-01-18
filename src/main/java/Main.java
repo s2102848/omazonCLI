@@ -12,7 +12,8 @@ public class Main {
     public static boolean shopping = false;
     public static User activeUser = greetingscreen();
 
-    public static File folder = new File("src\\database\\USERNAMES");
+    public static File usernameFolder = new File("src\\database\\USERNAMES");
+    public static File productFolder = new File("src\\database\\PRODUCTS");
 
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
@@ -128,8 +129,10 @@ public class Main {
             //todo: add to  favorites
         }else if (ans == 2){
             //todo: add to  cart
+            p.putIntoCart(activeUser);
         }else if (ans == 3){
             //todo: add to  cart and then to go shopping cart
+            p.putIntoCart(activeUser);
             checkingShoppingCart=true;
             shoppingCart();
         }else homepage();
@@ -413,10 +416,30 @@ public class Main {
                 }
             }
             System.out.println("\t\t\t\t Press 0 to go back");
+            System.out.println("\t\t\t\t Press 1 to remove product from shopping cart");
+            System.out.println("\t\t\t\t Press 2 to proceed to buy all products in the shopping cart");
             answer = s.next();
             if(answer.equals("0")){
                 checkingShoppingCart=false;
-            }else{
+            }else if(answer.equals("1")){
+                System.out.println("\t\t\t\t Please write out the name of the product you wish to remove:");
+                answer = s.next();
+                String[] shop = activeUser.getShoppingCart();
+
+                for(int i=0;i<shop.length;i++){
+                    if(shop[i]!=null){
+                        if(shop[i].equals(answer)){
+                            shop[i]=null;
+                        }
+
+                    }
+                }
+                activeUser.setShoppingCart(shop);
+            } else if(answer.equals("2")){
+                //todo: implement buying
+                System.out.println("Thank you for buying");
+            }
+            else{
                 shoppingCart();
             }
         }

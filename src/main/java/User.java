@@ -46,12 +46,10 @@ public class User implements Serializable {
         // this.transactionHistory=transactionHistory;
         // this.orderNotifications=orderNotifications;
     }
-
-    public static void initializeShoppingCart(String[] shoppingCart) {
-        for (int i = 0; i < shoppingCart.length; i++) {
-            shoppingCart[i] = "";
-        }
+    public void decreaseBalance(Product product){
+        this.balance-=product.getPrice();
     }
+
 
     public static void SaveToFile(User u) { // add filepath as a parameter
         try {
@@ -97,6 +95,7 @@ public class User implements Serializable {
 
     public void setShoppingCart(String[] shoppingCart) {
         this.shoppingCart = shoppingCart;
+        SaveToFile(this);
     }
 
     // Basic info
